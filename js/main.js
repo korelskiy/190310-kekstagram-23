@@ -2,9 +2,9 @@
 
 function intNumber(min, max) {
   if (max > min) {
-    let number = Math.floor(Math.random() * (max - min + 1)) + min;
-    console.log('Результат: целое число из диапазона от ' + min + ' до ' + max + ' равно: ' + number);
-    return number;
+    const NUMBER = Math.floor(Math.random() * (max - min + 1)) + min;
+    console.log('Результат: целое число из диапазона от ' + min + ' до ' + max + ' равно: ' + NUMBER);
+    return NUMBER;
   }
   console.log('Значение «до» меньше, чем значение «от», или равное ему!');
 }
