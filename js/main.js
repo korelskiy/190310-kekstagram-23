@@ -20,6 +20,15 @@ checkStringLength(LINE_TEXT, MAX_LENGTH);
 
 const DESCRIPTION_PHOTO_COUNT = 25;
 
+const MIN_URL_NUMBER = 1;
+const MAX_URL_NUMBER = 25;
+
+const MIN_LIKES_NUMBER = 15;
+const MAX_LIKES_NUMBER = 200;
+
+const MIN_AVATAR_NUMBER = 1;
+const MAX_AVATAR_NUMBER = 6;
+
 const DESCRIPTIONS = [
   'Фотография серого кота',
   'Фотография белого кота',
@@ -49,19 +58,20 @@ const MESSAGES = [
 
 const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
 
-const createDescPhoto = () => ({
-  idPhoto: getRandomNumber(1, 25),
-  urlPhoto: 'photos/' + getRandomNumber(1, 25) + '.jpg',
-  descriptionPhoto: getRandomArrayElement(DESCRIPTIONS),
-  likesPhoto: getRandomNumber(15, 200),
+const createDescriptionPhoto = (elem, index) => ({
+  id: index + 1,
+  url: `photos/${  getRandomNumber(MIN_URL_NUMBER, MAX_URL_NUMBER)  }.jpg`,
+  description: getRandomArrayElement(DESCRIPTIONS),
+  likes: getRandomNumber(MIN_LIKES_NUMBER, MAX_LIKES_NUMBER),
   comments: [
     {
-      idComm: getRandomNumber(1, 300),
-      avatarComm: 'img/avatar' + getRandomNumber(1, 6) + '.svg',
-      messageComm: getRandomArrayElement(MESSAGES),
-      nameComm: getRandomArrayElement(NAMES),
+      id: index + 1,
+      avatar: `img/avatar${  getRandomNumber(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)  }.svg`,
+      message: getRandomArrayElement(MESSAGES),
+      name: getRandomArrayElement(NAMES),
     },
   ],
 });
 
-const customPhoto = new Array(DESCRIPTION_PHOTO_COUNT).fill(null).map(() => createDescPhoto());
+
+const customPhoto = new Array(DESCRIPTION_PHOTO_COUNT).fill(null).map(createDescriptionPhoto);
