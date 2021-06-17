@@ -1,7 +1,7 @@
 // Генерация данных
 import {getRandomNumber, getRandomArrayElement} from './util.js';
 
-const DESCRIPTION_PHOTO_COUNT = 25;
+const DESCRIPTION_PHOTO_COUNT = 6;
 
 const MIN_URL_NUMBER = 1;
 const MAX_URL_NUMBER = 25;
