@@ -20,4 +20,11 @@ function checkStringLength(line, maxLength) {
 }
 checkStringLength(LINE_TEXT, MAX_LENGTH);
 
-export {getRandomNumber, getRandomArrayElement};
+// Событие нажатия клавиши Esc
+const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+// Событие нажатия клавиши Enter
+const isEnterEvent = (evt) => evt.key === 'Enter';
+
+export {getRandomNumber, getRandomArrayElement, isEscEvent, isEnterEvent};
+
