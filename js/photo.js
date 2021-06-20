@@ -16,4 +16,4 @@ picturesMiniature.forEach(({url, likes, comments}) => {
 
 listPictures.appendChild(picturesListFragment);
 
-
+export {listPictures};

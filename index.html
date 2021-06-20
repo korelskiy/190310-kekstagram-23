@@ -174,7 +174,7 @@
         </div>
 
         <!-- Кнопка для выхода из полноэкранного просмотра изображения -->
-        <button type="reset" class="big-picture__cancel  cancel" id="picture-cancel">Закрыть</button>
+        <button type="reset" class="big-picture__cancel  cancel" id="picture-cancel" tabindex="0">Закрыть</button>
       </div>
     </section>
   </main>
@@ -193,6 +193,14 @@
       </ul>
     </div>
   </footer>
+
+    <!-- Шаблон комментария к фотографии -->
+    <template id="comment">
+      <li class="social__comment">
+        <img class="social__picture" width="35" height="35">
+        <p class="social__text"></p>
+    </li>
+    </template>
 
   <!-- Шаблон изображения случайного пользователя -->
   <template id="picture">
