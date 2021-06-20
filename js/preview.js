@@ -54,6 +54,18 @@ buttonClosePreview.addEventListener ('click', () => {
   closePreviewBlock();
 });
 
+// Генерация комментариев к фотографии;
+const renderComments = (comments) => {
+  for (let index = 0; index <= comments.length-1; index++) {
+    const {avatar, name, message} = comments[index];
+    const commentElement = commentTemplate.cloneNode(true);
+    commentElement.querySelector('.social__picture').src = avatar;
+    commentElement.querySelector('.social__picture').alt =  name;
+    commentElement.querySelector('.social__text').textContent = message;
+    pictureListComments.appendChild(commentElement);
+  }
+};
+
 
 // Обработка события нажатия на миниатюру и заполнение данными;
 listPictures.addEventListener('click', (evt) => {
@@ -62,17 +74,12 @@ listPictures.addEventListener('click', (evt) => {
     openPreviewBlock();
     const index = Array.from(pictures).findIndex((elem) => elem === pictureElement);
     const photoInfo = customPhotos[index];
-    previewPicture.src = photoInfo.url;
-    pictureLikes.textContent = photoInfo.likes;
-    pictureCommentsCount.textContent = photoInfo.comments.length;
-    pictureDescription.textContent = photoInfo.description;
+    const {url, likes, comments, description} = photoInfo;
+    previewPicture.src = url;
+    pictureLikes.textContent = likes;
+    pictureCommentsCount.textContent = comments.length;
+    pictureDescription.textContent = description;
     pictureListComments.innerHTML = '';
-    for (let i = 0; i <= photoInfo.comments.length-1; i++) {
-      const commentElement = commentTemplate.cloneNode(true);
-      commentElement.querySelector('.social__picture').src = photoInfo.comments[i].avatar;
-      commentElement.querySelector('.social__picture').alt = photoInfo.comments[i].name;
-      commentElement.querySelector('.social__text').textContent = photoInfo.comments[i].message;
-      pictureListComments.appendChild(commentElement);
-    }
+    renderComments(comments);
   }
 });
