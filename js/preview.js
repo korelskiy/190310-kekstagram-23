@@ -13,9 +13,11 @@ const pictureDescription = previewBlock.querySelector('.social__caption');
 const pictureListComments = previewBlock.querySelector('.social__comments');
 const buttonClosePreview = previewBlock.querySelector('.big-picture__cancel');
 const previewBlockCommentsCount = previewBlock.querySelector('.social__comment-count');
-const newUploadedComments = previewBlock.querySelector('.comments-loader');
+const buttonUploadedComments = previewBlock.querySelector('.comments-loader');
 const pictures = document.querySelectorAll('.picture');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
+const COMMENT_STEP = 5;
+let newCommentStep = 5;
 
 // Обработчик события при нажатии клавиши Esc;
 const onPreviewEscKeydown = (evt) => {
@@ -26,13 +28,40 @@ const onPreviewEscKeydown = (evt) => {
   }
 };
 
+// Отрисовка и загрузка комментариев
+function viewComments (commentsCountView=COMMENT_STEP) {
+  const commentsCount = pictureListComments.children;
+  if (commentsCount.length > commentsCountView) {
+    buttonUploadedComments.classList.remove('hidden');
+    previewBlockCommentsCount.firstChild.textContent = `${ commentsCountView } из `;
+    for (let index = commentsCountView; index <= commentsCount.length-1; index++) {
+      commentsCount[index].classList.add('hidden');
+    }
+  }  else {
+    if (commentsCount.length <= commentsCountView) {
+      buttonUploadedComments.classList.add('hidden');
+    }
+    previewBlockCommentsCount.firstChild.textContent = `${commentsCount.length} из `;
+  }
+}
+
+// Обработка события нажатия на копку загрузки доп. комментариев;
+function newUploadedComments () {
+  newCommentStep += COMMENT_STEP;
+  const commentsCount = pictureListComments.children;
+  for (let index = 0; index <= commentsCount.length-1; index++) {
+    commentsCount[index].classList.remove('hidden');
+  }
+  viewComments(newCommentStep);
+}
+
 // Функция открытия окна с полноразмерным изображением;
 function openPreviewBlock () {
   previewBlock.classList.remove('hidden');
   body.classList.add('modal-open');
-  previewBlockCommentsCount.classList.add('hidden'); // скрываем временно!
-  newUploadedComments.classList.add('hidden'); // скрываем временно!
+  buttonUploadedComments.classList.add('hidden');
   document.addEventListener('keydown', onPreviewEscKeydown);
+  buttonUploadedComments.addEventListener ('click', newUploadedComments);
 }
 
 // Функция закрытия окна с полноразмерным изображением;
@@ -40,6 +69,8 @@ function closePreviewBlock () {
   previewBlock.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPreviewEscKeydown);
+  buttonUploadedComments.removeEventListener ('click', newUploadedComments);
+  newCommentStep = 5;
 }
 
 // Закрытие окна при нажатии клавиши Enter;
@@ -66,7 +97,6 @@ const renderComments = (comments) => {
   }
 };
 
-
 // Обработка события нажатия на миниатюру и заполнение данными;
 listPictures.addEventListener('click', (evt) => {
   const pictureElement = evt.target.closest('.picture');
@@ -81,5 +111,6 @@ listPictures.addEventListener('click', (evt) => {
     pictureDescription.textContent = description;
     pictureListComments.innerHTML = '';
     renderComments(comments);
+    viewComments();
   }
 });

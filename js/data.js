@@ -12,7 +12,7 @@ const MAX_LIKES_NUMBER = 200;
 const MIN_AVATAR_NUMBER = 1;
 const MAX_AVATAR_NUMBER = 6;
 
-const MIN_COMMENTS = 1;
+const MIN_COMMENTS = 0;
 const MAX_COMMENTS = 15;
 
 
