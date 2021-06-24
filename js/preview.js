@@ -12,10 +12,9 @@ const pictureCommentsCount = previewBlock.querySelector('.comments-count');
 const pictureDescription = previewBlock.querySelector('.social__caption');
 const pictureListComments = previewBlock.querySelector('.social__comments');
 const buttonClosePreview = previewBlock.querySelector('.big-picture__cancel');
-const previewBlockCommentsCount = previewBlock.querySelector('.social__comment-count');
-const newUploadedComments = previewBlock.querySelector('.comments-loader');
 const pictures = document.querySelectorAll('.picture');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
+
 
 // Обработчик события при нажатии клавиши Esc;
 const onPreviewEscKeydown = (evt) => {
@@ -27,20 +26,18 @@ const onPreviewEscKeydown = (evt) => {
 };
 
 // Функция открытия окна с полноразмерным изображением;
-function openPreviewBlock () {
+const openPreviewBlock = () => {
   previewBlock.classList.remove('hidden');
   body.classList.add('modal-open');
-  previewBlockCommentsCount.classList.add('hidden'); // скрываем временно!
-  newUploadedComments.classList.add('hidden'); // скрываем временно!
   document.addEventListener('keydown', onPreviewEscKeydown);
-}
+};
 
 // Функция закрытия окна с полноразмерным изображением;
-function closePreviewBlock () {
+const closePreviewBlock = () => {
   previewBlock.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPreviewEscKeydown);
-}
+};
 
 // Закрытие окна при нажатии клавиши Enter;
 buttonClosePreview.addEventListener('keydown', (evt) => {
@@ -65,7 +62,6 @@ const renderComments = (comments) => {
     pictureListComments.appendChild(commentElement);
   }
 };
-
 
 // Обработка события нажатия на миниатюру и заполнение данными;
 listPictures.addEventListener('click', (evt) => {
