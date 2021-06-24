@@ -1,4 +1,4 @@
-import {isEscEvent, isEnterEvent} from './util.js';
+import {isEscEvent} from './util.js';
 
 const form = document.querySelector('.img-upload__form');
 const buttonUpload = document.querySelector('#upload-file');
