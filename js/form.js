@@ -42,16 +42,22 @@ const setTagValidation = () => {
   hashtagPhoto.style.border = showHashtagError(tagsArray) ? '5px solid red' : '';
 };
 
+// Функция закрытия формы с загруженным изображением;
+const closeForm = () => {
+  formUpload.classList.add('hidden');
+  body.classList.remove('modal-open');
+  form.reset();
+};
+
+//Функция отмены обработчика Esc;
+const hasFocusedElements = () => document.activeElement === hashtagPhoto || document.activeElement === descriptionPhoto;
+
 // Обработчик события при нажатии клавиши Esc;
 const onFormEscKeydown = (evt) => {
-  if (document.activeElement !== hashtagPhoto && document.activeElement !== descriptionPhoto
-  ) {
-    if (isEscEvent(evt)) {
-      evt.preventDefault();
-      formUpload.classList.add('hidden');
-      body.classList.remove('modal-open');
-      form.reset();
-    }
+  if (isEscEvent(evt) && !hasFocusedElements()) {
+    closeForm();
+    document.removeEventListener('keydown', onFormEscKeydown);
+    hashtagPhoto.removeEventListener('input', setTagValidation);
   }
 };
 
@@ -73,25 +79,11 @@ const openForm = () => {
   loadPhotoPreview();
 };
 
-// Функция закрытия формы с загруженным изображением;
-const closeForm = () => {
-  formUpload.classList.add('hidden');
-  body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onFormEscKeydown);
-  hashtagPhoto.removeEventListener('input', setTagValidation);
-  form.reset();
-};
-
-// Закрытие окна при нажатии клавиши Enter;
-buttonCloseForm.addEventListener('keydown', (evt) => {
-  if (isEnterEvent(evt)) {
-    closeForm();
-  }
-});
-
 // Закрытие окна при клике на кнопку "Close";
 buttonCloseForm.addEventListener('click', () => {
   closeForm();
+  document.removeEventListener('keydown', onFormEscKeydown);
+  hashtagPhoto.removeEventListener('input', setTagValidation);
 });
 
 buttonUpload.addEventListener('change', () => {
