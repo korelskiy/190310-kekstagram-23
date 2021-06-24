@@ -16,8 +16,7 @@ const previewBlockCommentsCount = previewBlock.querySelector('.social__comment-c
 const buttonUploadedComments = previewBlock.querySelector('.comments-loader');
 const pictures = document.querySelectorAll('.picture');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
-const COMMENT_STEP = 5;
-let newCommentStep = 5;
+let CommentStep = 5;
 
 // Обработчик события при нажатии клавиши Esc;
 const onPreviewEscKeydown = (evt) => {
@@ -25,15 +24,16 @@ const onPreviewEscKeydown = (evt) => {
     evt.preventDefault();
     previewBlock.classList.add('hidden');
     body.classList.remove('modal-open');
+    CommentStep = 5;
   }
 };
 
 // Отрисовка и загрузка комментариев
-function viewComments (commentsCountView=COMMENT_STEP) {
+const viewComments = (commentsCountView=CommentStep) => {
   const commentsCount = pictureListComments.children;
   if (commentsCount.length > commentsCountView) {
     buttonUploadedComments.classList.remove('hidden');
-    previewBlockCommentsCount.firstChild.textContent = `${ commentsCountView } из `;
+    previewBlockCommentsCount.firstChild.textContent = `${commentsCountView} из `;
     for (let index = commentsCountView; index <= commentsCount.length-1; index++) {
       commentsCount[index].classList.add('hidden');
     }
@@ -43,35 +43,35 @@ function viewComments (commentsCountView=COMMENT_STEP) {
     }
     previewBlockCommentsCount.firstChild.textContent = `${commentsCount.length} из `;
   }
-}
+};
 
 // Обработка события нажатия на копку загрузки доп. комментариев;
-function newUploadedComments () {
-  newCommentStep += COMMENT_STEP;
+const newUploadedComments = () => {
+  CommentStep += CommentStep;
   const commentsCount = pictureListComments.children;
   for (let index = 0; index <= commentsCount.length-1; index++) {
     commentsCount[index].classList.remove('hidden');
   }
-  viewComments(newCommentStep);
-}
+  viewComments(CommentStep);
+};
 
 // Функция открытия окна с полноразмерным изображением;
-function openPreviewBlock () {
+const openPreviewBlock = () => {
   previewBlock.classList.remove('hidden');
   body.classList.add('modal-open');
   buttonUploadedComments.classList.add('hidden');
   document.addEventListener('keydown', onPreviewEscKeydown);
   buttonUploadedComments.addEventListener ('click', newUploadedComments);
-}
+};
 
 // Функция закрытия окна с полноразмерным изображением;
-function closePreviewBlock () {
+const closePreviewBlock = () => {
   previewBlock.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPreviewEscKeydown);
   buttonUploadedComments.removeEventListener ('click', newUploadedComments);
-  newCommentStep = 5;
-}
+  CommentStep = 5;
+};
 
 // Закрытие окна при нажатии клавиши Enter;
 buttonClosePreview.addEventListener('keydown', (evt) => {
