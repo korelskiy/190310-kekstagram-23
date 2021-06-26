@@ -30,7 +30,7 @@ const onPreviewEscKeydown = (evt) => {
 };
 
 // Обработка события отображения комментариев;
-const newCommentsDownload = () => {
+const showComments = () => {
   const comments = pictureListComments.children;
   const commentsCount = pictureListComments.children.length;
   const nextIndex = (commentsCount > lastShownIndex + COMMENT_STEP) ? lastShownIndex + COMMENT_STEP : commentsCount;
@@ -47,7 +47,7 @@ const openPreviewBlock = () => {
   previewBlock.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onPreviewEscKeydown);
-  buttonUploadedComments.addEventListener('click', newCommentsDownload);
+  buttonUploadedComments.addEventListener('click', showComments);
 };
 
 // Функция закрытия окна с полноразмерным изображением;
@@ -55,7 +55,7 @@ const closePreviewBlock = () => {
   previewBlock.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPreviewEscKeydown);
-  buttonUploadedComments.removeEventListener('click', newCommentsDownload);
+  buttonUploadedComments.removeEventListener('click', showComments);
 };
 
 // Закрытие окна при клике на кнопку "Close";
@@ -91,6 +91,6 @@ listPictures.addEventListener('click', (evt) => {
     pictureListComments.innerHTML = '';
     renderComments(comments);
     lastShownIndex = 0;
-    newCommentsDownload();
+    showComments();
   }
 });
