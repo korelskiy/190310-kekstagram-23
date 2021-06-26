@@ -1,1 +1,122 @@
 //Наложение эффектов на изображение.
+import {photoPreview} from './form.js';
+
+const sliderBlock = document.querySelector('.img-upload__effect-level');
+const effectLevel = document.querySelector('.effect-level__slider');
+const valueEffect = document.querySelector('.effect-level__value');
+
+const filters = {
+  chrome: {
+    minRangeSlider: 0,
+    maxRangeSlider: 1,
+    startSlider: 0.1,
+    stepSlider: 1,
+    filter: 'grayscale',
+  },
+  sepia: {
+    minRangeSlider: 0,
+    maxRangeSlider: 1,
+    startSlider: 0.1,
+    stepSlider: 1,
+    filter: 'sepia',
+  },
+  marvin: {
+    minRangeSlider: 0,
+    maxRangeSlider: 100,
+    startSlider: 1,
+    stepSlider: 100,
+    filter: 'invert',
+  },
+  phobos: {
+    minRangeSlider: 0,
+    maxRangeSlider: 3,
+    startSlider: 0.1,
+    stepSlider: 3,
+    filter: 'blur',
+  },
+  heat: {
+    minRangeSlider: 1,
+    maxRangeSlider: 3,
+    startSlider: 0.1,
+    stepSlider: 3,
+    filter: 'brightness',
+  },
+  none: {
+    minRangeSlider: 0,
+    maxRangeSlider: 1,
+    startSlider: 0.1,
+    stepSlider: 1,
+    filter: '',
+  },
+
+};
+
+const getEffectLevel = (name, value) => {
+  switch (name) {
+    case 'chrome':
+      return `${filters[name].filter}(${value})`;
+    case 'sepia':
+      return  `${filters[name].filter}(${value})`;
+    case 'marvin':
+      return  `${filters[name].filter}(${value}%)`;
+    case 'phobos':
+      return  `${filters[name].filter}(${value}px)`;
+    case 'heat':
+      return `${filters[name].filter}(${value})`;
+    case 'none':
+      return 'none';
+  }
+};
+
+// Подключаем слайдер на страницу формы;
+noUiSlider.create(effectLevel, {
+  range: {
+    min: 0,
+    max: 1,
+  },
+  start: 1,
+  step: 0.1,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      if (Number.isInteger(value)) {
+        return value.toFixed(0);
+      }
+      return value.toFixed(1);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+const getSliderSettings = (nameFilter) => {
+  effectLevel.noUiSlider.updateOptions({
+    range: {
+      min: nameFilter.minRangeSlider,
+      max: nameFilter.maxRangeSlider,
+    },
+    step: nameFilter.startSlider,
+    start: nameFilter.stepSlider,
+  });
+};
+
+const applyFilterToImage = (filterName) => {
+  const effectClass = `effects__preview--${filterName}`;
+  photoPreview.className = '';
+  photoPreview.classList.add(effectClass);
+  sliderBlock.classList.toggle('hidden', filterName === 'none');
+};
+
+const applyFilter = (evt) => {
+  const effectName = evt.target.value;
+  applyFilterToImage(effectName);
+  getSliderSettings(filters[effectName]);
+  effectLevel.noUiSlider.on('update', (value, handle) => {
+    const valueSlider = value[handle];
+    valueEffect.value = valueSlider;
+    photoPreview.style.filter = getEffectLevel(effectName, valueSlider);
+  });
+};
+
+export {applyFilter};

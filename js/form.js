@@ -1,4 +1,6 @@
 import {isEscEvent} from './util.js';
+import {applyFilter} from './effects.js';
+import {zoomOut, zoomIn, scaleValue, MAX_SCALE_VALUE} from './scale.js';
 
 const form = document.querySelector('.img-upload__form');
 const buttonUpload = document.querySelector('#upload-file');
@@ -7,7 +9,12 @@ const body = document.querySelector('body');
 const buttonCloseForm = formUpload.querySelector('.img-upload__cancel');
 const hashtagPhoto = formUpload.querySelector('.text__hashtags');
 const descriptionPhoto = formUpload.querySelector('.text__description');
-const photoPreview = formUpload.querySelector('.img-upload__preview').querySelector('img');
+const photoPreview = document.querySelector('.img-upload__preview').querySelector('img');
+const sliderBlock = document.querySelector('.img-upload__effect-level');
+const effectsList = document.querySelector('.effects__list');
+const controlSmaller = document.querySelector('.scale__control--smaller');
+const controlBigger = document.querySelector('.scale__control--bigger');
+
 
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAG_COUNT = 5;
@@ -42,10 +49,14 @@ const setTagValidation = () => {
   hashtagPhoto.style.border = showHashtagError(tagsArray) ? '5px solid red' : '';
 };
 
+
 // Функция закрытия формы с загруженным изображением;
 const closeForm = () => {
   formUpload.classList.add('hidden');
   body.classList.remove('modal-open');
+  photoPreview.style.transform = '';
+  photoPreview.className = '';
+  photoPreview.style.filter = 'none';
   form.reset();
 };
 
@@ -58,6 +69,8 @@ const onFormEscKeydown = (evt) => {
     closeForm();
     document.removeEventListener('keydown', onFormEscKeydown);
     hashtagPhoto.removeEventListener('input', setTagValidation);
+    controlSmaller.removeEventListener('click', zoomOut);
+    controlBigger.removeEventListener('click', zoomIn);
   }
 };
 
@@ -76,6 +89,11 @@ const openForm = () => {
   body.classList.add('modal-open');
   document.addEventListener('keydown', onFormEscKeydown);
   hashtagPhoto.addEventListener('input', setTagValidation);
+  scaleValue.value = MAX_SCALE_VALUE;
+  sliderBlock.classList.add('hidden');
+  controlSmaller.addEventListener('click', zoomOut);
+  controlBigger.addEventListener('click', zoomIn);
+  effectsList.addEventListener('change', applyFilter);
   loadPhotoPreview();
 };
 
@@ -84,8 +102,13 @@ buttonCloseForm.addEventListener('click', () => {
   closeForm();
   document.removeEventListener('keydown', onFormEscKeydown);
   hashtagPhoto.removeEventListener('input', setTagValidation);
+  controlSmaller.removeEventListener('click', zoomOut);
+  controlBigger.removeEventListener('click', zoomIn);
+  effectsList.removeEventListener('change', applyFilter);
 });
 
 buttonUpload.addEventListener('change', () => {
   openForm();
 });
+
+export {photoPreview};
