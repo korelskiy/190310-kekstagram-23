@@ -13,7 +13,7 @@ const MIN_AVATAR_NUMBER = 1;
 const MAX_AVATAR_NUMBER = 6;
 
 const MIN_COMMENTS = 0;
-const MAX_COMMENTS = 15;
+const MAX_COMMENTS = 35;
 
 
 const DESCRIPTIONS = [
