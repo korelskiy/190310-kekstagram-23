@@ -1,6 +1,6 @@
 import {isEscEvent} from './util.js';
 import {applyFilter} from './effects.js';
-import {zoomOut, zoomIn, scaleValue, MAX_SCALE_VALUE} from './scale.js';
+import {zoomImage, scaleControl, MAX_SCALE_VALUE} from './scale.js';
 
 const form = document.querySelector('.img-upload__form');
 const buttonUpload = document.querySelector('#upload-file');
@@ -69,8 +69,8 @@ const onFormEscKeydown = (evt) => {
     closeForm();
     document.removeEventListener('keydown', onFormEscKeydown);
     hashtagPhoto.removeEventListener('input', setTagValidation);
-    controlSmaller.removeEventListener('click', zoomOut);
-    controlBigger.removeEventListener('click', zoomIn);
+    controlSmaller.removeEventListener('click', zoomImage);
+    controlBigger.removeEventListener('click', zoomImage);
   }
 };
 
@@ -89,10 +89,10 @@ const openForm = () => {
   body.classList.add('modal-open');
   document.addEventListener('keydown', onFormEscKeydown);
   hashtagPhoto.addEventListener('input', setTagValidation);
-  scaleValue.value = MAX_SCALE_VALUE;
+  scaleControl.value = MAX_SCALE_VALUE;
   sliderBlock.classList.add('hidden');
-  controlSmaller.addEventListener('click', zoomOut);
-  controlBigger.addEventListener('click', zoomIn);
+  controlSmaller.addEventListener('click', zoomImage);
+  controlBigger.addEventListener('click', zoomImage);
   effectsList.addEventListener('change', applyFilter);
   loadPhotoPreview();
 };
@@ -102,13 +102,11 @@ buttonCloseForm.addEventListener('click', () => {
   closeForm();
   document.removeEventListener('keydown', onFormEscKeydown);
   hashtagPhoto.removeEventListener('input', setTagValidation);
-  controlSmaller.removeEventListener('click', zoomOut);
-  controlBigger.removeEventListener('click', zoomIn);
+  controlSmaller.removeEventListener('click', zoomImage);
+  controlBigger.removeEventListener('click', zoomImage);
   effectsList.removeEventListener('change', applyFilter);
 });
 
 buttonUpload.addEventListener('change', () => {
   openForm();
 });
-
-export {photoPreview};

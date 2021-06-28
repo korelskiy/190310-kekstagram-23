@@ -1,32 +1,22 @@
 // Редактирование масштаба изображения;
 
-import {photoPreview} from './form.js';
-
-const scaleValue = document.querySelector('.scale__control--value');
+const photoPreview = document.querySelector('.img-upload__preview').querySelector('img');
+const scaleControl = document.querySelector('.scale__control--value');
+const buttonZoomIn = document.querySelector('.scale__control--bigger');
 
 const SCALE_STEP = 25;
 const MAX_SCALE_VALUE = '100%';
 const MIN_SCALE_VALUE = '25%';
 
-
-// Функция уменьшить масштаб изображения;
-const zoomOut = () => {
-  if (scaleValue.value !== MIN_SCALE_VALUE) {
-    let currentValue = parseInt(scaleValue.value, 10);
-    currentValue -= SCALE_STEP;
-    scaleValue.value = `${currentValue}%`;
+const zoomImage = (evt) => {
+  const isZoomIn = evt.target === buttonZoomIn;
+  const scaleValue = isZoomIn ? MAX_SCALE_VALUE : MIN_SCALE_VALUE;
+  if (scaleControl.value !== scaleValue) {
+    let currentValue = parseInt(scaleControl.value, 10);
+    currentValue = isZoomIn ? currentValue + SCALE_STEP : currentValue - SCALE_STEP;
+    scaleControl.value = `${currentValue}%`;
     photoPreview.style.transform = `scale(${currentValue / 100})`;
   }
 };
 
-// Функция увеличить масштаб изображения;
-const zoomIn = () => {
-  if (scaleValue.value !== MAX_SCALE_VALUE) {
-    let currentValue = parseInt(scaleValue.value, 10);
-    currentValue += SCALE_STEP;
-    scaleValue.value = `${currentValue}%`;
-    photoPreview.style.transform = `scale(${currentValue / 100})`;
-  }
-};
-
-export {zoomOut, zoomIn, scaleValue, MAX_SCALE_VALUE};
+export {zoomImage, scaleControl, MAX_SCALE_VALUE};

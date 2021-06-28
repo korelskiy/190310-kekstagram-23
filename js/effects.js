@@ -1,6 +1,6 @@
 //Наложение эффектов на изображение.
-import {photoPreview} from './form.js';
 
+const photoPreview = document.querySelector('.img-upload__preview').querySelector('img');
 const sliderBlock = document.querySelector('.img-upload__effect-level');
 const effectLevel = document.querySelector('.effect-level__slider');
 const valueEffect = document.querySelector('.effect-level__value');
@@ -9,43 +9,43 @@ const filters = {
   chrome: {
     minRangeSlider: 0,
     maxRangeSlider: 1,
-    startSlider: 0.1,
-    stepSlider: 1,
+    stepSlider: 0.1,
+    startSlider: 1,
     filter: 'grayscale',
   },
   sepia: {
     minRangeSlider: 0,
     maxRangeSlider: 1,
-    startSlider: 0.1,
-    stepSlider: 1,
+    stepSlider: 0.1,
+    startSlider: 1,
     filter: 'sepia',
   },
   marvin: {
     minRangeSlider: 0,
     maxRangeSlider: 100,
-    startSlider: 1,
-    stepSlider: 100,
+    stepSlider: 1,
+    startSlider: 100,
     filter: 'invert',
   },
   phobos: {
     minRangeSlider: 0,
     maxRangeSlider: 3,
-    startSlider: 0.1,
-    stepSlider: 3,
+    stepSlider: 0.1,
+    startSlider: 3,
     filter: 'blur',
   },
   heat: {
     minRangeSlider: 1,
     maxRangeSlider: 3,
-    startSlider: 0.1,
-    stepSlider: 3,
+    stepSlider: 0.1,
+    startSlider: 3,
     filter: 'brightness',
   },
   none: {
     minRangeSlider: 0,
     maxRangeSlider: 1,
-    startSlider: 0.1,
-    stepSlider: 1,
+    stepSlider: 0.1,
+    startSlider: 1,
     filter: '',
   },
 
@@ -90,14 +90,14 @@ noUiSlider.create(effectLevel, {
   },
 });
 
-const getSliderSettings = (nameFilter) => {
+const updateSliderSettings = (nameFilter) => {
   effectLevel.noUiSlider.updateOptions({
     range: {
       min: nameFilter.minRangeSlider,
       max: nameFilter.maxRangeSlider,
     },
-    step: nameFilter.startSlider,
-    start: nameFilter.stepSlider,
+    step: nameFilter.stepSlider,
+    start: nameFilter.startSlider,
   });
 };
 
@@ -111,7 +111,7 @@ const applyFilterToImage = (filterName) => {
 const applyFilter = (evt) => {
   const effectName = evt.target.value;
   applyFilterToImage(effectName);
-  getSliderSettings(filters[effectName]);
+  updateSliderSettings(filters[effectName]);
   effectLevel.noUiSlider.on('update', (value, handle) => {
     const valueSlider = value[handle];
     valueEffect.value = valueSlider;
