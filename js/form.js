@@ -1,6 +1,8 @@
+
 import {isEscEvent} from './util.js';
 import {applyFilter} from './effects.js';
 import {zoomImage, scaleControl, MAX_SCALE_VALUE} from './scale.js';
+import {sendData} from './api.js';
 
 const form = document.querySelector('.img-upload__form');
 const buttonUpload = document.querySelector('#upload-file');
@@ -15,6 +17,10 @@ const effectsList = document.querySelector('.effects__list');
 const controlSmaller = document.querySelector('.scale__control--smaller');
 const controlBigger = document.querySelector('.scale__control--bigger');
 
+const successTemplate = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
+const errorTemplate = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
+const successButton = successTemplate.querySelector('.success__button');
+const errorButton = errorTemplate.querySelector('.error__button');
 
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAG_COUNT = 5;
@@ -47,6 +53,11 @@ const setTagValidation = () => {
   const tagsArray = hashtagPhoto.value.toLowerCase().split(/[\s]+/).filter((hashtag) => hashtag.length > 0);
   hashtagPhoto.setCustomValidity(showHashtagError(tagsArray));
   hashtagPhoto.style.border = showHashtagError(tagsArray) ? '5px solid red' : '';
+};
+
+// Сообщение об отправлении формы;
+const getFormSubmission = (messageTemplate) => {
+  body.appendChild(messageTemplate);
 };
 
 
@@ -83,6 +94,25 @@ const loadPhotoPreview = () => {
   reader.readAsDataURL(file);
 };
 
+// Функция отправки данных с формы на сервер
+const setPictureFormSubmit = (onSuccess) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendData(
+      () => {
+        onSuccess();
+        getFormSubmission(successTemplate);
+      },
+      () => {
+        closeForm();
+        getFormSubmission(errorTemplate);
+      },
+      new FormData(evt.target),
+    );
+  });
+};
+
 // Функция открытия формы с загруженным изображением;
 const openForm = () => {
   formUpload.classList.remove('hidden');
@@ -95,6 +125,7 @@ const openForm = () => {
   controlBigger.addEventListener('click', zoomImage);
   effectsList.addEventListener('change', applyFilter);
   loadPhotoPreview();
+  setPictureFormSubmit(closeForm);
 };
 
 // Закрытие окна при клике на кнопку "Close";

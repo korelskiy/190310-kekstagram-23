@@ -1,7 +1,4 @@
 // Отрисовка окна с полноразмерным изображением;
-
-import {listPictures} from './photo.js';
-import {customPhotos} from './data.js';
 import {isEscEvent} from './util.js';
 
 const body = document.querySelector('body');
@@ -14,11 +11,10 @@ const pictureListComments = previewBlock.querySelector('.social__comments');
 const buttonClosePreview = previewBlock.querySelector('.big-picture__cancel');
 const previewBlockCommentsCount = previewBlock.querySelector('.social__comment-count');
 const buttonUploadedComments = previewBlock.querySelector('.comments-loader');
-const pictures = document.querySelectorAll('.picture');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
+const listPictures = document.querySelector('.pictures');
 const COMMENT_STEP = 5;
 let lastShownIndex = 0;
-
 
 // Обработчик события при нажатии клавиши Esc;
 const onPreviewEscKeydown = (evt) => {
@@ -76,21 +72,25 @@ const renderComments = (comments) => {
   }
 };
 
-// Обработка события нажатия на миниатюру и заполнение данными;
-listPictures.addEventListener('click', (evt) => {
-  const pictureElement = evt.target.closest('.picture');
-  if (pictureElement) {
-    openPreviewBlock();
-    const index = Array.from(pictures).findIndex((elem) => elem === pictureElement);
-    const photoInfo = customPhotos[index];
-    const {url, likes, comments, description} = photoInfo;
-    previewPicture.src = url;
-    pictureLikes.textContent = likes;
-    pictureCommentsCount.textContent = comments.length;
-    pictureDescription.textContent = description;
-    pictureListComments.innerHTML = '';
-    renderComments(comments);
-    lastShownIndex = 0;
-    showComments();
-  }
-});
+const renderPicturesPreview = (picturesData) => {
+  listPictures.addEventListener('click', (evt) => {
+    const pictureElement = evt.target.closest('.picture');
+    const pictures = document.querySelectorAll('.picture');
+    if (pictureElement) {
+      openPreviewBlock();
+      const index = Array.from(pictures).findIndex((elem) => elem === pictureElement);
+      const photoInfo = picturesData[index];
+      const {url, likes, comments, description} = photoInfo;
+      previewPicture.src = url;
+      pictureLikes.textContent = likes;
+      pictureCommentsCount.textContent = comments.length;
+      pictureDescription.textContent = description;
+      pictureListComments.innerHTML = '';
+      renderComments(comments);
+      lastShownIndex = 0;
+      showComments();
+    }
+  });
+};
+
+export {renderPicturesPreview};
