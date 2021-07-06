@@ -5,18 +5,20 @@ import {getData} from './api.js';
 import {showAlert} from './util.js';
 
 getData(
-  (picturesData) => renderPicturesMiniature(picturesData),
+  (picturesData) => {
+    renderPicturesMiniature(picturesData);
+    renderPicturesPreview(picturesData);
+  },
   (onFail) => showAlert(onFail),
 );
-
-getData(
-  (picturesData) => renderPicturesPreview(picturesData),
-  (onFail) => showAlert(onFail),
-);
-
 /*
-getData((picturesData) => {
-  renderPicturesMiniature(picturesData),
-  renderPicturesPreview(picturesData);
-});
+sendRequest(
+  'https://23.javascript.pages.academy/kekstagram/data',
+  'GET',
+  (picturesData) => {
+    renderPicturesMiniature(picturesData);
+    renderPicturesPreview(picturesData);
+  },
+  (onFail) => showAlert(onFail),
+);
 */

@@ -35,4 +35,25 @@ const sendData = (onSuccess, onFail, body) => {
     });
 };
 
+/*
+const sendRequest = (url, method, onSuccess, onFail, body) => {
+  fetch(
+    url,
+    {
+      method: method,
+      body,
+    },
+  )
+    .then((response) => {
+      if (response.ok) {
+        onSuccess();
+      } else {
+        onFail();
+      }
+    })
+    .catch(() => {
+      onFail();
+    });
+};
+*/
 export {getData, sendData};

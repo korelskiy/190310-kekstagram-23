@@ -8,7 +8,7 @@ const SCALE_STEP = 25;
 const MAX_SCALE_VALUE = '100%';
 const MIN_SCALE_VALUE = '25%';
 
-const zoomImage = (evt) => {
+const onZoomImage = (evt) => {
   const isZoomIn = evt.target === buttonZoomIn;
   const scaleValue = isZoomIn ? MAX_SCALE_VALUE : MIN_SCALE_VALUE;
   if (scaleControl.value !== scaleValue) {
@@ -19,4 +19,4 @@ const zoomImage = (evt) => {
   }
 };
 
-export {zoomImage, scaleControl, MAX_SCALE_VALUE};
+export {onZoomImage, scaleControl, MAX_SCALE_VALUE};

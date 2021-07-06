@@ -1,7 +1,7 @@
 
 import {isEscEvent} from './util.js';
-import {applyFilter} from './effects.js';
-import {zoomImage, scaleControl, MAX_SCALE_VALUE} from './scale.js';
+import {onApplyFilter} from './effects.js';
+import {onZoomImage, scaleControl, MAX_SCALE_VALUE} from './scale.js';
 import {sendData} from './api.js';
 
 const form = document.querySelector('.img-upload__form');
@@ -17,13 +17,52 @@ const effectsList = document.querySelector('.effects__list');
 const controlSmaller = document.querySelector('.scale__control--smaller');
 const controlBigger = document.querySelector('.scale__control--bigger');
 
-const successTemplate = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
-const errorTemplate = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
-const successButton = successTemplate.querySelector('.success__button');
-const errorButton = errorTemplate.querySelector('.error__button');
 
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAG_COUNT = 5;
+
+const messageObject = {
+  success : document.querySelector('#success').content.querySelector('.success').cloneNode(true),
+  error : document.querySelector('#error').content.querySelector('.error').cloneNode(true),
+};
+
+const closeMessageForm = () => {
+  const closeButton = body.lastChild.querySelector('button');
+  body.removeChild(body.lastChild);
+  closeButton.removeEventListener('click', closeMessageForm);
+};
+
+
+// Обработчик события при нажатии клавиши Esc при сообщении об отправке формы;
+const onMessageFormEscKeydown = (evt) => {
+  if (isEscEvent(evt)) {
+    const closeButton = body.lastChild.querySelector('button');
+    body.removeChild(body.lastChild);
+    closeButton.removeEventListener('click', closeMessageForm);
+    document.removeEventListener('keydown', onMessageFormEscKeydown);
+  }
+};
+
+const clickOutsideFormMessage = (evt) => {
+  if (evt.target.nodeName !== 'DIV') {
+    const closeButton = body.lastChild.querySelector('button');
+    body.removeChild(body.lastChild);
+    closeButton.removeEventListener('click', closeMessageForm);
+    document.removeEventListener('keydown', onMessageFormEscKeydown);
+    document.removeEventListener('keydown', clickOutsideFormMessage);
+  }
+};
+
+
+// Функция открытия окна с сообщением об отпавки формы
+const openMessageForm = (messageType) => {
+  const messageNode = messageObject[messageType];
+  body.appendChild(messageNode);
+  const closeButton = messageNode.querySelector(`.${messageType}__button`);
+  closeButton.addEventListener('click', closeMessageForm);
+  document.addEventListener('keydown', onMessageFormEscKeydown);
+  document.addEventListener('click', clickOutsideFormMessage);
+};
 
 // Правила валидации хэштегов;
 const showHashtagError = (hashtag) => {
@@ -55,12 +94,6 @@ const setTagValidation = () => {
   hashtagPhoto.style.border = showHashtagError(tagsArray) ? '5px solid red' : '';
 };
 
-// Сообщение об отправлении формы;
-const getFormSubmission = (messageTemplate) => {
-  body.appendChild(messageTemplate);
-};
-
-
 // Функция закрытия формы с загруженным изображением;
 const closeForm = () => {
   formUpload.classList.add('hidden');
@@ -80,8 +113,8 @@ const onFormEscKeydown = (evt) => {
     closeForm();
     document.removeEventListener('keydown', onFormEscKeydown);
     hashtagPhoto.removeEventListener('input', setTagValidation);
-    controlSmaller.removeEventListener('click', zoomImage);
-    controlBigger.removeEventListener('click', zoomImage);
+    controlSmaller.removeEventListener('click', onZoomImage);
+    controlBigger.removeEventListener('click', onZoomImage);
   }
 };
 
@@ -102,11 +135,11 @@ const setPictureFormSubmit = (onSuccess) => {
     sendData(
       () => {
         onSuccess();
-        getFormSubmission(successTemplate);
+        openMessageForm('success');
       },
       () => {
         closeForm();
-        getFormSubmission(errorTemplate);
+        openMessageForm('error');
       },
       new FormData(evt.target),
     );
@@ -121,9 +154,9 @@ const openForm = () => {
   hashtagPhoto.addEventListener('input', setTagValidation);
   scaleControl.value = MAX_SCALE_VALUE;
   sliderBlock.classList.add('hidden');
-  controlSmaller.addEventListener('click', zoomImage);
-  controlBigger.addEventListener('click', zoomImage);
-  effectsList.addEventListener('change', applyFilter);
+  controlSmaller.addEventListener('click', onZoomImage);
+  controlBigger.addEventListener('click', onZoomImage);
+  effectsList.addEventListener('change', onApplyFilter);
   loadPhotoPreview();
   setPictureFormSubmit(closeForm);
 };
@@ -133,9 +166,9 @@ buttonCloseForm.addEventListener('click', () => {
   closeForm();
   document.removeEventListener('keydown', onFormEscKeydown);
   hashtagPhoto.removeEventListener('input', setTagValidation);
-  controlSmaller.removeEventListener('click', zoomImage);
-  controlBigger.removeEventListener('click', zoomImage);
-  effectsList.removeEventListener('change', applyFilter);
+  controlSmaller.removeEventListener('click', onZoomImage);
+  controlBigger.removeEventListener('click', onZoomImage);
+  effectsList.removeEventListener('change', onApplyFilter);
 });
 
 buttonUpload.addEventListener('change', () => {
