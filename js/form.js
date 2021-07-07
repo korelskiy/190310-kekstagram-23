@@ -21,11 +21,15 @@ const controlBigger = document.querySelector('.scale__control--bigger');
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAG_COUNT = 5;
 
+// ------------------------------------------!!!!!!!!!!!!!!!!!!-------------------------------------------------------------
+//Вот тут тоже какой-то огород получается у меня, много функций...Не знаю как правильно и красиво отрефакторить код
+
 const messageObject = {
   success : document.querySelector('#success').content.querySelector('.success').cloneNode(true),
   error : document.querySelector('#error').content.querySelector('.error').cloneNode(true),
 };
 
+// Функция закрытия окна сообщения отправки формы
 const closeMessageForm = () => {
   const closeButton = body.lastChild.querySelector('button');
   body.removeChild(body.lastChild);
@@ -43,6 +47,7 @@ const onMessageFormEscKeydown = (evt) => {
   }
 };
 
+// Функция закрытия окна сообщения при клике вне поля сообщения
 const clickOutsideFormMessage = (evt) => {
   if (evt.target.nodeName !== 'DIV') {
     const closeButton = body.lastChild.querySelector('button');
@@ -63,6 +68,8 @@ const openMessageForm = (messageType) => {
   document.addEventListener('keydown', onMessageFormEscKeydown);
   document.addEventListener('click', clickOutsideFormMessage);
 };
+
+// ------------------------------------------!!!!!!!!!!!!!!!!!!-------------------------------------------------------------
 
 // Правила валидации хэштегов;
 const showHashtagError = (hashtag) => {

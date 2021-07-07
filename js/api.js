@@ -35,6 +35,7 @@ const sendData = (onSuccess, onFail, body) => {
     });
 };
 
+// Вот тут я не знаю как отрефакторить код так, чтобы была одна функция запроса и отправки данных на сервер
 /*
 const sendRequest = (url, method, onSuccess, onFail, body) => {
   fetch(

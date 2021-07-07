@@ -11,6 +11,8 @@ getData(
   },
   (onFail) => showAlert(onFail),
 );
+
+// Вот тут я не знаю как отрефакторить код так, чтобы была одна функция запроса и отправки данных на сервер
 /*
 sendRequest(
   'https://23.javascript.pages.academy/kekstagram/data',
@@ -22,3 +24,4 @@ sendRequest(
   (onFail) => showAlert(onFail),
 );
 */
+
