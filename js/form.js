@@ -8,7 +8,7 @@ const buttonUpload = document.querySelector('#upload-file');
 const formUpload = document.querySelector('.img-upload__overlay');
 const body = document.querySelector('body');
 const buttonCloseForm = formUpload.querySelector('.img-upload__cancel');
-const HashtagPhotoAddHandler = formUpload.querySelector('.text__hashtags');
+const hashtagPhoto = formUpload.querySelector('.text__hashtags');
 const descriptionPhoto = formUpload.querySelector('.text__description');
 const photoPreview = document.querySelector('.img-upload__preview').querySelector('img');
 const sliderBlock = document.querySelector('.img-upload__effect-level');
@@ -99,10 +99,10 @@ const showHashtagError = (hashtag) => {
 };
 
 // Функция проверки на валидность хэштега;
-const setTagValidation = () => {
-  const tagsArray = HashtagPhotoAddHandler.value.toLowerCase().split(/[\s]+/).filter((hashtag) => hashtag.length > 0);
-  HashtagPhotoAddHandler.setCustomValidity(showHashtagError(tagsArray));
-  HashtagPhotoAddHandler.style.border = showHashtagError(tagsArray) ? '5px solid red' : '';
+const onTagValidation = () => {
+  const tagsArray = hashtagPhoto.value.toLowerCase().split(/[\s]+/).filter((hashtag) => hashtag.length > 0);
+  hashtagPhoto.setCustomValidity(showHashtagError(tagsArray));
+  hashtagPhoto.style.border = showHashtagError(tagsArray) ? '5px solid red' : '';
 };
 
 // Функция закрытия формы с загруженным изображением;
@@ -116,14 +116,14 @@ const closeForm = () => {
 };
 
 //Функция отмены обработчика Esc;
-const hasFocusedElements = () => document.activeElement === HashtagPhotoAddHandler || document.activeElement === descriptionPhoto;
+const hasFocusedElements = () => document.activeElement === hashtagPhoto || document.activeElement === descriptionPhoto;
 
 // Обработчик события при нажатии клавиши Esc;
 const onFormEscKeydown = (evt) => {
   if (isEscEvent(evt) && !hasFocusedElements()) {
     closeForm();
     document.removeEventListener('keydown', onFormEscKeydown);
-    HashtagPhotoAddHandler.removeEventListener('input', setTagValidation);
+    hashtagPhoto.removeEventListener('input', onTagValidation);
     controlSmaller.removeEventListener('click', onZoomImage);
     controlBigger.removeEventListener('click', onZoomImage);
   }
@@ -164,7 +164,7 @@ const openForm = () => {
   formUpload.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onFormEscKeydown);
-  HashtagPhotoAddHandler.addEventListener('input', setTagValidation);
+  hashtagPhoto.addEventListener('input', onTagValidation);
   scaleControl.value = MAX_SCALE_VALUE;
   sliderBlock.classList.add('hidden');
   controlSmaller.addEventListener('click', onZoomImage);
@@ -178,7 +178,7 @@ const openForm = () => {
 buttonCloseForm.addEventListener('click', () => {
   closeForm();
   document.removeEventListener('keydown', onFormEscKeydown);
-  HashtagPhotoAddHandler.removeEventListener('input', setTagValidation);
+  hashtagPhoto.removeEventListener('input', onTagValidation);
   controlSmaller.removeEventListener('click', onZoomImage);
   controlBigger.removeEventListener('click', onZoomImage);
   effectsList.removeEventListener('change', onApplyFilter);

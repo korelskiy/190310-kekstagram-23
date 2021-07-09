@@ -10,7 +10,7 @@ const pictureDescription = previewBlock.querySelector('.social__caption');
 const pictureListComments = previewBlock.querySelector('.social__comments');
 const buttonClosePreview = previewBlock.querySelector('.big-picture__cancel');
 const previewBlockCommentsCount = previewBlock.querySelector('.social__comment-count');
-const onButtonUploadedComments = previewBlock.querySelector('.comments-loader');
+const buttonUploadedComments = previewBlock.querySelector('.comments-loader');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
 
 const COMMENT_STEP = 5;
@@ -26,14 +26,14 @@ const onPreviewEscKeydown = (evt) => {
 };
 
 // Обработка события отображения комментариев;
-const showComments = () => {
+const onShowComments = () => {
   const comments = pictureListComments.children;
   const commentsCount = pictureListComments.children.length;
   const nextIndex = (commentsCount > lastShownIndex + COMMENT_STEP) ? lastShownIndex + COMMENT_STEP : commentsCount;
   for (let index = lastShownIndex; index <= nextIndex - 1; index++) {
     comments[index].classList.remove('hidden');
   }
-  onButtonUploadedComments.classList.toggle('hidden', commentsCount === nextIndex);
+  buttonUploadedComments.classList.toggle('hidden', commentsCount === nextIndex);
   previewBlockCommentsCount.firstChild.textContent = `${nextIndex} из `;
   lastShownIndex = nextIndex;
 };
@@ -43,7 +43,7 @@ const openPreviewBlock = () => {
   previewBlock.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onPreviewEscKeydown);
-  onButtonUploadedComments.addEventListener('click', showComments);
+  buttonUploadedComments.addEventListener('click', onShowComments);
 };
 
 // Функция закрытия окна с полноразмерным изображением;
@@ -51,7 +51,7 @@ const closePreviewBlock = () => {
   previewBlock.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPreviewEscKeydown);
-  onButtonUploadedComments.removeEventListener('click', showComments);
+  buttonUploadedComments.removeEventListener('click', onShowComments);
 };
 
 // Закрытие окна при клике на кнопку "Close";
@@ -87,7 +87,7 @@ const renderPicturesPreview = (evt, picturesData) => {
     pictureListComments.innerHTML = '';
     renderComments(comments);
     lastShownIndex = 0;
-    showComments();
+    onShowComments();
   }
 };
 
