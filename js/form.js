@@ -1,25 +1,28 @@
 
 import {isEscEvent} from './util.js';
 import {onApplyFilter} from './effects.js';
-import {onZoomImage, scaleControl, MAX_SCALE_VALUE} from './scale.js';
-import {sendData} from './api.js';
+import {fetchData} from './api.js';
 
 const form = document.querySelector('.img-upload__form');
 const buttonUpload = document.querySelector('#upload-file');
 const formUpload = document.querySelector('.img-upload__overlay');
 const body = document.querySelector('body');
 const buttonCloseForm = formUpload.querySelector('.img-upload__cancel');
-const hashtagPhoto = formUpload.querySelector('.text__hashtags');
+const HashtagPhotoAddHandler = formUpload.querySelector('.text__hashtags');
 const descriptionPhoto = formUpload.querySelector('.text__description');
 const photoPreview = document.querySelector('.img-upload__preview').querySelector('img');
 const sliderBlock = document.querySelector('.img-upload__effect-level');
 const effectsList = document.querySelector('.effects__list');
 const controlSmaller = document.querySelector('.scale__control--smaller');
 const controlBigger = document.querySelector('.scale__control--bigger');
-
+const scaleControl = document.querySelector('.scale__control--value');
+const buttonZoomIn = document.querySelector('.scale__control--bigger');
 
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAG_COUNT = 5;
+const SCALE_STEP = 25;
+const MAX_SCALE_VALUE = '100%';
+const MIN_SCALE_VALUE = '25%';
 
 // ------------------------------------------!!!!!!!!!!!!!!!!!!-------------------------------------------------------------
 //Вот тут тоже какой-то огород получается у меня, много функций...Не знаю как правильно и красиво отрефакторить код
@@ -47,6 +50,7 @@ const onMessageFormEscKeydown = (evt) => {
   }
 };
 
+/*
 // Функция закрытия окна сообщения при клике вне поля сообщения
 const clickOutsideFormMessage = (evt) => {
   if (evt.target.nodeName !== 'DIV') {
@@ -57,7 +61,7 @@ const clickOutsideFormMessage = (evt) => {
     document.removeEventListener('keydown', clickOutsideFormMessage);
   }
 };
-
+*/
 
 // Функция открытия окна с сообщением об отпавки формы
 const openMessageForm = (messageType) => {
@@ -66,10 +70,22 @@ const openMessageForm = (messageType) => {
   const closeButton = messageNode.querySelector(`.${messageType}__button`);
   closeButton.addEventListener('click', closeMessageForm);
   document.addEventListener('keydown', onMessageFormEscKeydown);
-  document.addEventListener('click', clickOutsideFormMessage);
 };
 
 // ------------------------------------------!!!!!!!!!!!!!!!!!!-------------------------------------------------------------
+
+// Функция редактирования масштаба изображения;
+
+const onZoomImage = (evt) => {
+  const isZoomIn = evt.target === buttonZoomIn;
+  const scaleValue = isZoomIn ? MAX_SCALE_VALUE : MIN_SCALE_VALUE;
+  if (scaleControl.value !== scaleValue) {
+    let currentValue = parseInt(scaleControl.value, 10);
+    currentValue = isZoomIn ? currentValue + SCALE_STEP : currentValue - SCALE_STEP;
+    scaleControl.value = `${currentValue}%`;
+    photoPreview.style.transform = `scale(${currentValue / 100})`;
+  }
+};
 
 // Правила валидации хэштегов;
 const showHashtagError = (hashtag) => {
@@ -96,9 +112,9 @@ const showHashtagError = (hashtag) => {
 
 // Функция проверки на валидность хэштега;
 const setTagValidation = () => {
-  const tagsArray = hashtagPhoto.value.toLowerCase().split(/[\s]+/).filter((hashtag) => hashtag.length > 0);
-  hashtagPhoto.setCustomValidity(showHashtagError(tagsArray));
-  hashtagPhoto.style.border = showHashtagError(tagsArray) ? '5px solid red' : '';
+  const tagsArray = HashtagPhotoAddHandler.value.toLowerCase().split(/[\s]+/).filter((hashtag) => hashtag.length > 0);
+  HashtagPhotoAddHandler.setCustomValidity(showHashtagError(tagsArray));
+  HashtagPhotoAddHandler.style.border = showHashtagError(tagsArray) ? '5px solid red' : '';
 };
 
 // Функция закрытия формы с загруженным изображением;
@@ -112,14 +128,14 @@ const closeForm = () => {
 };
 
 //Функция отмены обработчика Esc;
-const hasFocusedElements = () => document.activeElement === hashtagPhoto || document.activeElement === descriptionPhoto;
+const hasFocusedElements = () => document.activeElement === HashtagPhotoAddHandler || document.activeElement === descriptionPhoto;
 
 // Обработчик события при нажатии клавиши Esc;
 const onFormEscKeydown = (evt) => {
   if (isEscEvent(evt) && !hasFocusedElements()) {
     closeForm();
     document.removeEventListener('keydown', onFormEscKeydown);
-    hashtagPhoto.removeEventListener('input', setTagValidation);
+    HashtagPhotoAddHandler.removeEventListener('input', setTagValidation);
     controlSmaller.removeEventListener('click', onZoomImage);
     controlBigger.removeEventListener('click', onZoomImage);
   }
@@ -139,7 +155,9 @@ const setPictureFormSubmit = (onSuccess) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
-    sendData(
+    fetchData(
+      'https://23.javascript.pages.academy/kekstagram',
+      'POST',
       () => {
         onSuccess();
         openMessageForm('success');
@@ -158,7 +176,7 @@ const openForm = () => {
   formUpload.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onFormEscKeydown);
-  hashtagPhoto.addEventListener('input', setTagValidation);
+  HashtagPhotoAddHandler.addEventListener('input', setTagValidation);
   scaleControl.value = MAX_SCALE_VALUE;
   sliderBlock.classList.add('hidden');
   controlSmaller.addEventListener('click', onZoomImage);
@@ -172,7 +190,7 @@ const openForm = () => {
 buttonCloseForm.addEventListener('click', () => {
   closeForm();
   document.removeEventListener('keydown', onFormEscKeydown);
-  hashtagPhoto.removeEventListener('input', setTagValidation);
+  HashtagPhotoAddHandler.removeEventListener('input', setTagValidation);
   controlSmaller.removeEventListener('click', onZoomImage);
   controlBigger.removeEventListener('click', onZoomImage);
   effectsList.removeEventListener('change', onApplyFilter);

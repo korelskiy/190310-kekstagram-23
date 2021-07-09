@@ -10,9 +10,9 @@ const pictureDescription = previewBlock.querySelector('.social__caption');
 const pictureListComments = previewBlock.querySelector('.social__comments');
 const buttonClosePreview = previewBlock.querySelector('.big-picture__cancel');
 const previewBlockCommentsCount = previewBlock.querySelector('.social__comment-count');
-const buttonUploadedComments = previewBlock.querySelector('.comments-loader');
+const onButtonUploadedComments = previewBlock.querySelector('.comments-loader');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
-const listPictures = document.querySelector('.pictures');
+
 const COMMENT_STEP = 5;
 let lastShownIndex = 0;
 
@@ -33,7 +33,7 @@ const showComments = () => {
   for (let index = lastShownIndex; index <= nextIndex - 1; index++) {
     comments[index].classList.remove('hidden');
   }
-  buttonUploadedComments.classList.toggle('hidden', commentsCount === nextIndex);
+  onButtonUploadedComments.classList.toggle('hidden', commentsCount === nextIndex);
   previewBlockCommentsCount.firstChild.textContent = `${nextIndex} из `;
   lastShownIndex = nextIndex;
 };
@@ -43,7 +43,7 @@ const openPreviewBlock = () => {
   previewBlock.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onPreviewEscKeydown);
-  buttonUploadedComments.addEventListener('click', showComments);
+  onButtonUploadedComments.addEventListener('click', showComments);
 };
 
 // Функция закрытия окна с полноразмерным изображением;
@@ -51,7 +51,7 @@ const closePreviewBlock = () => {
   previewBlock.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPreviewEscKeydown);
-  buttonUploadedComments.removeEventListener('click', showComments);
+  onButtonUploadedComments.removeEventListener('click', showComments);
 };
 
 // Закрытие окна при клике на кнопку "Close";
@@ -72,25 +72,23 @@ const renderComments = (comments) => {
   }
 };
 
-const renderPicturesPreview = (picturesData) => {
-  listPictures.addEventListener('click', (evt) => {
-    const pictureElement = evt.target.closest('.picture');
-    const pictures = document.querySelectorAll('.picture');
-    if (pictureElement) {
-      openPreviewBlock();
-      const index = Array.from(pictures).findIndex((elem) => elem === pictureElement);
-      const photoInfo = picturesData[index];
-      const {url, likes, comments, description} = photoInfo;
-      previewPicture.src = url;
-      pictureLikes.textContent = likes;
-      pictureCommentsCount.textContent = comments.length;
-      pictureDescription.textContent = description;
-      pictureListComments.innerHTML = '';
-      renderComments(comments);
-      lastShownIndex = 0;
-      showComments();
-    }
-  });
+const renderPicturesPreview = (evt, picturesData) => {
+  const pictureElement = evt.target.closest('.picture');
+  const pictures = document.querySelectorAll('.picture');
+  if (pictureElement) {
+    openPreviewBlock();
+    const index = Array.from(pictures).findIndex((elem) => elem === pictureElement);
+    const photoInfo = picturesData[index];
+    const {url, likes, comments, description} = photoInfo;
+    previewPicture.src = url;
+    pictureLikes.textContent = likes;
+    pictureCommentsCount.textContent = comments.length;
+    pictureDescription.textContent = description;
+    pictureListComments.innerHTML = '';
+    renderComments(comments);
+    lastShownIndex = 0;
+    showComments();
+  }
 };
 
 export {renderPicturesPreview};
