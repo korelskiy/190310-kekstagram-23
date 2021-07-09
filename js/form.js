@@ -23,45 +23,33 @@ const MAX_HASHTAG_COUNT = 5;
 const SCALE_STEP = 25;
 const MAX_SCALE_VALUE = '100%';
 const MIN_SCALE_VALUE = '25%';
-
-// ------------------------------------------!!!!!!!!!!!!!!!!!!-------------------------------------------------------------
-//Вот тут тоже какой-то огород получается у меня, много функций...Не знаю как правильно и красиво отрефакторить код
-
 const messageObject = {
   success : document.querySelector('#success').content.querySelector('.success').cloneNode(true),
   error : document.querySelector('#error').content.querySelector('.error').cloneNode(true),
 };
 
-// Функция закрытия окна сообщения отправки формы
-const closeMessageForm = () => {
+// Обработчик закрытия сообщений об отправке формы;
+function closeMessageForm () {
   const closeButton = body.lastChild.querySelector('button');
   body.removeChild(body.lastChild);
   closeButton.removeEventListener('click', closeMessageForm);
-};
+  document.removeEventListener('keydown', onMessageFormEscKeydown);
+  document.removeEventListener('click', clickOutsideFormMessage);
+}
 
-
-// Обработчик события при нажатии клавиши Esc при сообщении об отправке формы;
+// Функция закрытия окна сообщения при клике на Esc
 const onMessageFormEscKeydown = (evt) => {
   if (isEscEvent(evt)) {
-    const closeButton = body.lastChild.querySelector('button');
-    body.removeChild(body.lastChild);
-    closeButton.removeEventListener('click', closeMessageForm);
-    document.removeEventListener('keydown', onMessageFormEscKeydown);
+    closeMessageForm();
   }
 };
 
-/*
 // Функция закрытия окна сообщения при клике вне поля сообщения
-const clickOutsideFormMessage = (evt) => {
-  if (evt.target.nodeName !== 'DIV') {
-    const closeButton = body.lastChild.querySelector('button');
-    body.removeChild(body.lastChild);
-    closeButton.removeEventListener('click', closeMessageForm);
-    document.removeEventListener('keydown', onMessageFormEscKeydown);
-    document.removeEventListener('keydown', clickOutsideFormMessage);
+const clickOutsideFormMessage = (evt) =>  {
+  if (evt.target.nodeName !== 'DIV' && evt.target.nodeName !== 'H2') {
+    closeMessageForm();
   }
 };
-*/
 
 // Функция открытия окна с сообщением об отпавки формы
 const openMessageForm = (messageType) => {
@@ -70,9 +58,9 @@ const openMessageForm = (messageType) => {
   const closeButton = messageNode.querySelector(`.${messageType}__button`);
   closeButton.addEventListener('click', closeMessageForm);
   document.addEventListener('keydown', onMessageFormEscKeydown);
+  document.addEventListener('click', clickOutsideFormMessage);
 };
 
-// ------------------------------------------!!!!!!!!!!!!!!!!!!-------------------------------------------------------------
 
 // Функция редактирования масштаба изображения;
 
