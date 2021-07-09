@@ -1,6 +1,7 @@
+
 import {isEscEvent} from './util.js';
-import {applyFilter} from './effects.js';
-import {zoomImage, scaleControl, MAX_SCALE_VALUE} from './scale.js';
+import {onApplyFilter} from './effects.js';
+import {fetchData} from './api.js';
 
 const form = document.querySelector('.img-upload__form');
 const buttonUpload = document.querySelector('#upload-file');
@@ -14,10 +15,65 @@ const sliderBlock = document.querySelector('.img-upload__effect-level');
 const effectsList = document.querySelector('.effects__list');
 const controlSmaller = document.querySelector('.scale__control--smaller');
 const controlBigger = document.querySelector('.scale__control--bigger');
-
+const scaleControl = document.querySelector('.scale__control--value');
+const buttonZoomIn = document.querySelector('.scale__control--bigger');
 
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAG_COUNT = 5;
+const SCALE_STEP = 25;
+const MAX_SCALE_VALUE = '100%';
+const MIN_SCALE_VALUE = '25%';
+const messageObject = {
+  success : document.querySelector('#success').content.querySelector('.success').cloneNode(true),
+  error : document.querySelector('#error').content.querySelector('.error').cloneNode(true),
+};
+
+// Обработчик закрытия сообщений об отправке формы;
+function closeMessageForm () {
+  const closeButton = body.lastChild.querySelector('button');
+  body.removeChild(body.lastChild);
+  closeButton.removeEventListener('click', closeMessageForm);
+  document.removeEventListener('keydown', onMessageFormEscKeydown);
+  document.removeEventListener('click', clickOutsideFormMessage);
+}
+
+// Функция закрытия окна сообщения при клике на Esc
+const onMessageFormEscKeydown = (evt) => {
+  if (isEscEvent(evt)) {
+    closeMessageForm();
+  }
+};
+
+// Функция закрытия окна сообщения при клике вне поля сообщения
+const clickOutsideFormMessage = (evt) =>  {
+  if (evt.target.nodeName !== 'DIV' && evt.target.nodeName !== 'H2') {
+    closeMessageForm();
+  }
+};
+
+// Функция открытия окна с сообщением об отпавки формы
+const openMessageForm = (messageType) => {
+  const messageNode = messageObject[messageType];
+  body.appendChild(messageNode);
+  const closeButton = messageNode.querySelector(`.${messageType}__button`);
+  closeButton.addEventListener('click', closeMessageForm);
+  document.addEventListener('keydown', onMessageFormEscKeydown);
+  document.addEventListener('click', clickOutsideFormMessage);
+};
+
+
+// Функция редактирования масштаба изображения;
+
+const onZoomImage = (evt) => {
+  const isZoomIn = evt.target === buttonZoomIn;
+  const scaleValue = isZoomIn ? MAX_SCALE_VALUE : MIN_SCALE_VALUE;
+  if (scaleControl.value !== scaleValue) {
+    let currentValue = parseInt(scaleControl.value, 10);
+    currentValue = isZoomIn ? currentValue + SCALE_STEP : currentValue - SCALE_STEP;
+    scaleControl.value = `${currentValue}%`;
+    photoPreview.style.transform = `scale(${currentValue / 100})`;
+  }
+};
 
 // Правила валидации хэштегов;
 const showHashtagError = (hashtag) => {
@@ -43,12 +99,11 @@ const showHashtagError = (hashtag) => {
 };
 
 // Функция проверки на валидность хэштега;
-const setTagValidation = () => {
+const onTagValidation = () => {
   const tagsArray = hashtagPhoto.value.toLowerCase().split(/[\s]+/).filter((hashtag) => hashtag.length > 0);
   hashtagPhoto.setCustomValidity(showHashtagError(tagsArray));
   hashtagPhoto.style.border = showHashtagError(tagsArray) ? '5px solid red' : '';
 };
-
 
 // Функция закрытия формы с загруженным изображением;
 const closeForm = () => {
@@ -68,9 +123,9 @@ const onFormEscKeydown = (evt) => {
   if (isEscEvent(evt) && !hasFocusedElements()) {
     closeForm();
     document.removeEventListener('keydown', onFormEscKeydown);
-    hashtagPhoto.removeEventListener('input', setTagValidation);
-    controlSmaller.removeEventListener('click', zoomImage);
-    controlBigger.removeEventListener('click', zoomImage);
+    hashtagPhoto.removeEventListener('input', onTagValidation);
+    controlSmaller.removeEventListener('click', onZoomImage);
+    controlBigger.removeEventListener('click', onZoomImage);
   }
 };
 
@@ -83,28 +138,50 @@ const loadPhotoPreview = () => {
   reader.readAsDataURL(file);
 };
 
+// Функция отправки данных с формы на сервер
+const setPictureFormSubmit = (onSuccess) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    fetchData(
+      'https://23.javascript.pages.academy/kekstagram',
+      'POST',
+      () => {
+        onSuccess();
+        openMessageForm('success');
+      },
+      () => {
+        closeForm();
+        openMessageForm('error');
+      },
+      new FormData(evt.target),
+    );
+  });
+};
+
 // Функция открытия формы с загруженным изображением;
 const openForm = () => {
   formUpload.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onFormEscKeydown);
-  hashtagPhoto.addEventListener('input', setTagValidation);
+  hashtagPhoto.addEventListener('input', onTagValidation);
   scaleControl.value = MAX_SCALE_VALUE;
   sliderBlock.classList.add('hidden');
-  controlSmaller.addEventListener('click', zoomImage);
-  controlBigger.addEventListener('click', zoomImage);
-  effectsList.addEventListener('change', applyFilter);
+  controlSmaller.addEventListener('click', onZoomImage);
+  controlBigger.addEventListener('click', onZoomImage);
+  effectsList.addEventListener('change', onApplyFilter);
   loadPhotoPreview();
+  setPictureFormSubmit(closeForm);
 };
 
 // Закрытие окна при клике на кнопку "Close";
 buttonCloseForm.addEventListener('click', () => {
   closeForm();
   document.removeEventListener('keydown', onFormEscKeydown);
-  hashtagPhoto.removeEventListener('input', setTagValidation);
-  controlSmaller.removeEventListener('click', zoomImage);
-  controlBigger.removeEventListener('click', zoomImage);
-  effectsList.removeEventListener('change', applyFilter);
+  hashtagPhoto.removeEventListener('input', onTagValidation);
+  controlSmaller.removeEventListener('click', onZoomImage);
+  controlBigger.removeEventListener('click', onZoomImage);
+  effectsList.removeEventListener('change', onApplyFilter);
 });
 
 buttonUpload.addEventListener('change', () => {
