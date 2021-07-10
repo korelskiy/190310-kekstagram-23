@@ -108,7 +108,7 @@ const applyFilterToImage = (filterName) => {
   sliderBlock.classList.toggle('hidden', filterName === 'none');
 };
 
-const onApplyFilter = (evt) => {
+const onFilterClick = (evt) => {
   const effectName = evt.target.value;
   applyFilterToImage(effectName);
   updateSliderSettings(filters[effectName]);
@@ -119,4 +119,4 @@ const onApplyFilter = (evt) => {
   });
 };
 
-export {onApplyFilter};
+export {onFilterClick};

@@ -46,6 +46,15 @@ checkStringLength(LINE_TEXT, MAX_LENGTH);
 // Событие нажатия клавиши Esc
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
+// Функция  устранения дребезга
+function debounce (callback, timeoutDelay) {
+  let timeout;
+  return () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(callback, timeoutDelay);
+  };
+}
 
-export {getRandomNumber, getRandomArrayElement, isEscEvent, showAlert};
+
+export {getRandomNumber, getRandomArrayElement, isEscEvent, showAlert, debounce};
 
