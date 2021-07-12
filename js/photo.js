@@ -2,10 +2,8 @@
 
 import {onMiniaturePicturesClick} from './preview.js';
 
-
 const listPictures = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-
 
 // Функция очистки миниатурных изображений;
 const removeListPictures = () => {
@@ -15,7 +13,7 @@ const removeListPictures = () => {
   }
 };
 
-
+// Функция отрисовки миниатурных изображений;
 const renderPicturesMiniature = (picturesData) => {
   const picturesListFragment = document.createDocumentFragment();
   picturesData.forEach(({url, likes, comments}) => {

@@ -1,26 +1,27 @@
 // Фильтрация изображений от других пользователей.
+
 import {getRandomNumber, debounce} from './util.js';
 import {renderPicturesMiniature} from './photo.js';
 
-const ImagesFilters = document.querySelector('.img-filters');
-const ImagesFiltersButton = ImagesFilters.querySelectorAll('.img-filters__button');
-
-const filterDefaultButton = ImagesFilters.querySelector('#filter-default');
-const filterRandomButton = ImagesFilters.querySelector('#filter-random');
-const filterDiscussedButton = ImagesFilters.querySelector('#filter-discussed');
+const imagesFilters = document.querySelector('.img-filters');
+const imagesFiltersButton = imagesFilters.querySelectorAll('.img-filters__button');
+const filterDefaultButton = imagesFilters.querySelector('#filter-default');
+const filterRandomButton = imagesFilters.querySelector('#filter-random');
+const filterDiscussedButton = imagesFilters.querySelector('#filter-discussed');
 
 const FILTER_RANDOM_IMAGE_COUNT = 10;
-//const RERENDER_DELAY = 50000;
+const RERENDER_DELAY = 500;
 
-
+// Функция применения стиля на активную кнопку фильтра;
 const setStyleButtonFilter = (evt) => {
   const buttonFilter = evt.target;
-  for (let index = 0; index < ImagesFiltersButton.length; index++) {
-    ImagesFiltersButton[index].classList.remove('img-filters__button--active');
+  for (let index = 0; index < imagesFiltersButton.length; index++) {
+    imagesFiltersButton[index].classList.remove('img-filters__button--active');
   }
   buttonFilter.classList.add('img-filters__button--active');
 };
 
+// Функция получения массива случайных изображений;
 const getRandomImages = (picturesData) => {
   const arrayIndexImages = [];
   const arrayRandomImages = [];
@@ -36,27 +37,27 @@ const getRandomImages = (picturesData) => {
   return arrayRandomImages;
 };
 
+// Функция получения обсуждаемых изображений;
 const getDiscussedImages = (picturesData) => {
   const arrayDiscussedImages = picturesData.slice();
   arrayDiscussedImages.sort((second, first) => first.comments.length - second.comments.length);
   return arrayDiscussedImages;
 };
 
+// Функция визуализации изображений с устранением дребезга;
+const renderPicturesDebounce = debounce(renderPicturesMiniature, RERENDER_DELAY);
+
+
+// Обработчик события при выборе фильтра;
 const onImagesFiltersButtonClick = (evt, picturesData) => {
   const buttonFilter = evt.target;
   setStyleButtonFilter(evt);
   if (buttonFilter === filterDefaultButton) {
-    renderPicturesMiniature(picturesData);
+    renderPicturesDebounce(picturesData);
   }  if (buttonFilter === filterRandomButton) {
-    renderPicturesMiniature(getRandomImages(picturesData));
+    renderPicturesDebounce(getRandomImages(picturesData));
   }  if (buttonFilter === filterDiscussedButton) {
-    renderPicturesMiniature(getDiscussedImages(picturesData));
-    /*
-    renderPicturesMiniature(debounce(
-      getDiscussedImages(picturesData),
-      RERENDER_DELAY,
-    ));
-    */
+    renderPicturesDebounce(getDiscussedImages(picturesData));
   }
 };
 

@@ -1,3 +1,5 @@
+// Получение данных с сервера.
+
 const fetchData = (url, method, onSuccess, onFail, body) => {
   fetch(url, {method, body})
     .then((response) => {

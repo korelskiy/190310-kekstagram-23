@@ -1,3 +1,4 @@
+// Редактирование загруженного изображения и отправка формы.
 
 import {isEscEvent} from './util.js';
 import {onFilterClick} from './effects.js';
@@ -17,15 +18,29 @@ const controlSmaller = document.querySelector('.scale__control--smaller');
 const controlBigger = document.querySelector('.scale__control--bigger');
 const scaleControl = document.querySelector('.scale__control--value');
 const buttonZoomIn = document.querySelector('.scale__control--bigger');
+const messageObjects = {
+  success : document.querySelector('#success').content.querySelector('.success').cloneNode(true),
+  error : document.querySelector('#error').content.querySelector('.error').cloneNode(true),
+};
 
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_HASHTAG_COUNT = 5;
 const SCALE_STEP = 25;
 const MAX_SCALE_VALUE = '100%';
 const MIN_SCALE_VALUE = '25%';
-const messageObject = {
-  success : document.querySelector('#success').content.querySelector('.success').cloneNode(true),
-  error : document.querySelector('#error').content.querySelector('.error').cloneNode(true),
+
+// Функция закрытия окна сообщения при клике на Esc;
+const onMessageFormEscKeydown = (evt) => {
+  if (isEscEvent(evt)) {
+    onCloseFormButtonClick();
+  }
+};
+
+// Функция закрытия окна сообщения при клике вне поля сообщения;
+const onMessageOverlayClick = (evt) =>  {
+  if (evt.target.nodeName !== 'DIV' && evt.target.nodeName !== 'H2') {
+    onCloseFormButtonClick();
+  }
 };
 
 // Обработчик закрытия сообщений об отправке формы;
@@ -37,23 +52,9 @@ function onCloseFormButtonClick () {
   document.removeEventListener('click', onMessageOverlayClick);
 }
 
-// Функция закрытия окна сообщения при клике на Esc
-const onMessageFormEscKeydown = (evt) => {
-  if (isEscEvent(evt)) {
-    onCloseFormButtonClick();
-  }
-};
-
-// Функция закрытия окна сообщения при клике вне поля сообщения
-const onMessageOverlayClick = (evt) =>  {
-  if (evt.target.nodeName !== 'DIV' && evt.target.nodeName !== 'H2') {
-    onCloseFormButtonClick();
-  }
-};
-
-// Функция открытия окна с сообщением об отпавки формы
+// Функция открытия окна с сообщением об отпавки формы;
 const openMessageForm = (messageType) => {
-  const messageNode = messageObject[messageType];
+  const messageNode = messageObjects[messageType];
   body.appendChild(messageNode);
   const closeButton = messageNode.querySelector(`.${messageType}__button`);
   closeButton.addEventListener('click', onCloseFormButtonClick);
@@ -61,9 +62,7 @@ const openMessageForm = (messageType) => {
   document.addEventListener('click', onMessageOverlayClick);
 };
 
-
 // Функция редактирования масштаба изображения;
-
 const onImageZoom = (evt) => {
   const isZoomIn = evt.target === buttonZoomIn;
   const scaleValue = isZoomIn ? MAX_SCALE_VALUE : MIN_SCALE_VALUE;
@@ -138,7 +137,7 @@ const loadPhotoPreview = () => {
   reader.readAsDataURL(file);
 };
 
-// Функция отправки данных с формы на сервер
+// Функция отправки данных с формы на сервер;
 const setPictureFormSubmit = (onSuccess) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();

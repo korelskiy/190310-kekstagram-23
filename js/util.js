@@ -1,7 +1,8 @@
+// Вспомогательные функции.
+
 const ALERT_SHOW_TIME = 5000;
 
 // Функция сообщения с ошибкой на 5 секунд;
-// Пока оставил так, как показывали в демке
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = 100;
@@ -21,40 +22,20 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-// Функция, возвращающая случайное целое число из переданного диапазона включительно.
+// Функция, возвращающая случайное целое число из переданного диапазона включительно;
+const getRandomNumber = (min, max) => (max > min) ? Math.floor(Math.random() * (max - min + 1)) + min : null;
 
-function getRandomNumber(min, max) {
-  return (max > min) ? Math.floor(Math.random() * (max - min + 1)) + min : null;
-}
-getRandomNumber(0, 100);
-
-// Функция, возвращающая случайный номер элемента из переданного массива.
-
-const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
-
-// Функция для проверки максимальной длины строки.
-// Из ТЗ: "Максимальная длина одного хэш-тега 20 символов, включая решётку".
-
-const LINE_TEXT = 'Текст строки для проверки';
-const MAX_LENGTH = 20;
-
-function checkStringLength(line, maxLength) {
-  return line.length <= maxLength;
-}
-checkStringLength(LINE_TEXT, MAX_LENGTH);
-
-// Событие нажатия клавиши Esc
+// Событие нажатия клавиши Esc;
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-// Функция  устранения дребезга
-function debounce (callback, timeoutDelay) {
-  let timeout;
-  return () => {
-    clearTimeout(timeout);
-    timeout = setTimeout(callback, timeoutDelay);
+// Функция устранения дребезга;
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
+};
 
-
-export {getRandomNumber, getRandomArrayElement, isEscEvent, showAlert, debounce};
+export {getRandomNumber, isEscEvent, showAlert, debounce};
 

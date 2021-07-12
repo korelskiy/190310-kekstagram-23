@@ -1,4 +1,5 @@
-// Отрисовка окна с полноразмерным изображением;
+// Отрисовка окна с полноразмерным изображением.
+
 import {isEscEvent} from './util.js';
 
 const body = document.querySelector('body');
@@ -12,9 +13,9 @@ const buttonClosePreview = previewBlock.querySelector('.big-picture__cancel');
 const previewBlockCommentsCount = previewBlock.querySelector('.social__comment-count');
 const buttonUploadedComments = previewBlock.querySelector('.comments-loader');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
+let lastShownIndex = 0;
 
 const COMMENT_STEP = 5;
-let lastShownIndex = 0;
 
 // Обработчик события при нажатии клавиши Esc;
 const onPreviewEscKeydown = (evt) => {
@@ -72,6 +73,7 @@ const renderComments = (comments) => {
   }
 };
 
+// Обработчик события при выборе миниатюрного изображения;
 const onMiniaturePicturesClick = (evt, picturesData) => {
   const pictureElement = evt.target.closest('.picture');
   const pictures = document.querySelectorAll('.picture');
