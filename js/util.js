@@ -1,6 +1,7 @@
 // Вспомогательные функции.
 
 const ALERT_SHOW_TIME = 5000;
+const FILTER_RANDOM_IMAGE_COUNT = 10;
 
 // Функция сообщения с ошибкой на 5 секунд;
 const showAlert = (message) => {
@@ -25,6 +26,22 @@ const showAlert = (message) => {
 // Функция, возвращающая случайное целое число из переданного диапазона включительно;
 const getRandomNumber = (min, max) => (max > min) ? Math.floor(Math.random() * (max - min + 1)) + min : null;
 
+// Функция получения массива случайных изображений;
+const getRandomArray = (picturesData) => {
+  const arrayIndexImages = [];
+  const arrayRandomImages = [];
+  while (arrayIndexImages.length < FILTER_RANDOM_IMAGE_COUNT) {
+    const randomIndex = getRandomNumber(0, picturesData.length-1);
+    if (arrayIndexImages.indexOf(randomIndex) === -1) {
+      arrayIndexImages.push(randomIndex);
+    }
+  }
+  for (const value of arrayIndexImages) {
+    arrayRandomImages.push(picturesData[value]);
+  }
+  return arrayRandomImages;
+};
+
 // Событие нажатия клавиши Esc;
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
@@ -37,5 +54,5 @@ const debounce = (callback, timeoutDelay) => {
   };
 };
 
-export {getRandomNumber, isEscEvent, showAlert, debounce};
+export {getRandomNumber, isEscEvent, showAlert, debounce, getRandomArray};
 

@@ -74,7 +74,7 @@ const renderComments = (comments) => {
 };
 
 // Обработчик события при выборе миниатюрного изображения;
-const onMiniaturePicturesClick = (evt, picturesData) => {
+const renderPicturePreview = (evt, picturesData) => {
   const pictureElement = evt.target.closest('.picture');
   const pictures = document.querySelectorAll('.picture');
   if (pictureElement) {
@@ -93,4 +93,4 @@ const onMiniaturePicturesClick = (evt, picturesData) => {
   }
 };
 
-export {onMiniaturePicturesClick};
+export {renderPicturePreview};

@@ -1,6 +1,6 @@
 // Просмотр загруженных изображений.
 
-import {onMiniaturePicturesClick} from './preview.js';
+import {renderPicturePreview} from './preview.js';
 
 const listPictures = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -25,7 +25,7 @@ const renderPicturesMiniature = (picturesData) => {
   });
   removeListPictures();
   listPictures.appendChild(picturesListFragment);
-  listPictures.addEventListener('click', (evt) => onMiniaturePicturesClick(evt, picturesData));
+  listPictures.addEventListener('click', (evt) => renderPicturePreview(evt, picturesData));
 };
 
 export {renderPicturesMiniature};
