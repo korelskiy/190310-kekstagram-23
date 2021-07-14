@@ -22,8 +22,8 @@ const setStyleButtonFilter = (evt) => {
 };
 
 // Функция получения обсуждаемых изображений;
-const getDiscussedImages = (picturesData) => {
-  const arrayDiscussedImages = picturesData.slice();
+const getDiscussedImages = (pictures) => {
+  const arrayDiscussedImages = pictures.slice();
   arrayDiscussedImages.sort((second, first) => first.comments.length - second.comments.length);
   return arrayDiscussedImages;
 };
@@ -32,23 +32,23 @@ const getDiscussedImages = (picturesData) => {
 const renderPicturesDebounce = debounce(renderPicturesMiniature, RERENDER_DELAY);
 
 // Обработчик события при выборе фильтра;
-const onImagesFiltersButtonClick = (evt, picturesData) => {
+const getImagesFilter = (evt, pictures) => {
   const buttonFilter = evt.target;
   setStyleButtonFilter(evt);
   switch (buttonFilter) {
     case filterDefaultButton:
-      return renderPicturesDebounce(picturesData);
+      return renderPicturesDebounce(pictures);
     case filterRandomButton:
-      return  renderPicturesDebounce(getRandomArray(picturesData));
+      return  renderPicturesDebounce(getRandomArray(pictures));
     case filterDiscussedButton:
-      return  renderPicturesDebounce(getDiscussedImages(picturesData));
+      return  renderPicturesDebounce(getDiscussedImages(pictures));
   }
 };
 
 //Функция отображения панели фильтров c обработчиком события при выборе фильтра;
-const addImageFilters = (picturesData) => {
+const addImageFilters = (pictures) => {
   imagesFilters.classList.remove('img-filters--inactive');
-  form.addEventListener('click', (evt) => onImagesFiltersButtonClick(evt, picturesData));
+  form.addEventListener('click', (evt) => getImagesFilter(evt, pictures));
 };
 
 export {addImageFilters};

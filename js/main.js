@@ -8,9 +8,9 @@ import {addImageFilters} from './filter.js';
 fetchData(
   'https://23.javascript.pages.academy/kekstagram/data',
   'GET',
-  (picturesData) => {
-    renderPicturesMiniature(picturesData);
-    addImageFilters(picturesData);
+  (pictures) => {
+    renderPicturesMiniature(pictures);
+    addImageFilters(pictures);
   },
   (onFail) => showAlert(onFail),
 );
