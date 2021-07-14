@@ -74,13 +74,13 @@ const renderComments = (comments) => {
 };
 
 // Обработчик события при выборе миниатюрного изображения;
-const renderPicturePreview = (evt, picturesData) => {
+const renderPicturePreview = (evt, pictures) => {
   const pictureElement = evt.target.closest('.picture');
-  const pictures = document.querySelectorAll('.picture');
+  const renderedImages = document.querySelectorAll('.picture');
   if (pictureElement) {
     openPreviewBlock();
-    const index = Array.from(pictures).findIndex((elem) => elem === pictureElement);
-    const photoInfo = picturesData[index];
+    const index = Array.from(renderedImages).findIndex((elem) => elem === pictureElement);
+    const photoInfo = pictures[index];
     const {url, likes, comments, description} = photoInfo;
     previewPicture.src = url;
     pictureLikes.textContent = likes;

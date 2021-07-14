@@ -14,9 +14,9 @@ const removeListPictures = () => {
 };
 
 // Функция отрисовки миниатурных изображений;
-const renderPicturesMiniature = (picturesData) => {
+const renderPicturesMiniature = (pictures) => {
   const picturesListFragment = document.createDocumentFragment();
-  picturesData.forEach(({url, likes, comments}) => {
+  pictures.forEach(({url, likes, comments}) => {
     const pictureElement = pictureTemplate.cloneNode(true);
     pictureElement.querySelector('.picture__img').src = url;
     pictureElement.querySelector('.picture__likes').textContent = likes;
@@ -25,7 +25,7 @@ const renderPicturesMiniature = (picturesData) => {
   });
   removeListPictures();
   listPictures.appendChild(picturesListFragment);
-  listPictures.addEventListener('click', (evt) => renderPicturePreview(evt, picturesData));
+  listPictures.addEventListener('click', (evt) => renderPicturePreview(evt, pictures));
 };
 
 export {renderPicturesMiniature};

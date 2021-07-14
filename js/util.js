@@ -27,17 +27,17 @@ const showAlert = (message) => {
 const getRandomNumber = (min, max) => (max > min) ? Math.floor(Math.random() * (max - min + 1)) + min : null;
 
 // Функция получения массива случайных изображений;
-const getRandomArray = (picturesData) => {
+const getRandomArray = (items) => {
   const arrayIndexImages = [];
   const arrayRandomImages = [];
   while (arrayIndexImages.length < FILTER_RANDOM_IMAGE_COUNT) {
-    const randomIndex = getRandomNumber(0, picturesData.length-1);
+    const randomIndex = getRandomNumber(0, items.length-1);
     if (arrayIndexImages.indexOf(randomIndex) === -1) {
       arrayIndexImages.push(randomIndex);
     }
   }
   for (const value of arrayIndexImages) {
-    arrayRandomImages.push(picturesData[value]);
+    arrayRandomImages.push(items[value]);
   }
   return arrayRandomImages;
 };
