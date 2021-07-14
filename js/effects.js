@@ -48,9 +48,9 @@ const filters = {
     startSlider: 1,
     filter: '',
   },
-
 };
 
+// Функция получения уровня эффекта;
 const getEffectLevel = (name, value) => {
   switch (name) {
     case 'chrome':
@@ -90,6 +90,7 @@ noUiSlider.create(effectLevel, {
   },
 });
 
+// Функция обновления параметров слайдера;
 const updateSliderSettings = (nameFilter) => {
   effectLevel.noUiSlider.updateOptions({
     range: {
@@ -101,6 +102,7 @@ const updateSliderSettings = (nameFilter) => {
   });
 };
 
+// Функция применения фильтров к изображению;
 const applyFilterToImage = (filterName) => {
   const effectClass = `effects__preview--${filterName}`;
   photoPreview.className = '';
@@ -108,7 +110,8 @@ const applyFilterToImage = (filterName) => {
   sliderBlock.classList.toggle('hidden', filterName === 'none');
 };
 
-const onApplyFilter = (evt) => {
+// Обработчик события при выборе фильтра;
+const onFilterClick = (evt) => {
   const effectName = evt.target.value;
   applyFilterToImage(effectName);
   updateSliderSettings(filters[effectName]);
@@ -119,4 +122,4 @@ const onApplyFilter = (evt) => {
   });
 };
 
-export {onApplyFilter};
+export {onFilterClick};

@@ -1,1 +1,56 @@
 // Фильтрация изображений от других пользователей.
+
+import {getRandomArray, debounce} from './util.js';
+import {renderPicturesMiniature} from './photo.js';
+
+const imagesFilters = document.querySelector('.img-filters');
+const form = imagesFilters.querySelector('.img-filters__form');
+const imagesFiltersButton = imagesFilters.querySelectorAll('.img-filters__button');
+const filterDefaultButton = imagesFilters.querySelector('#filter-default');
+const filterRandomButton = imagesFilters.querySelector('#filter-random');
+const filterDiscussedButton = imagesFilters.querySelector('#filter-discussed');
+
+const RERENDER_DELAY = 500;
+
+// Функция применения стиля на активную кнопку фильтра;
+const setStyleButtonFilter = (evt) => {
+  const buttonFilter = evt.target;
+  for (let index = 0; index < imagesFiltersButton.length; index++) {
+    imagesFiltersButton[index].classList.remove('img-filters__button--active');
+  }
+  buttonFilter.classList.add('img-filters__button--active');
+};
+
+// Функция получения обсуждаемых изображений;
+const getDiscussedImages = (picturesData) => {
+  const arrayDiscussedImages = picturesData.slice();
+  arrayDiscussedImages.sort((second, first) => first.comments.length - second.comments.length);
+  return arrayDiscussedImages;
+};
+
+// Функция визуализации изображений с устранением дребезга;
+const renderPicturesDebounce = debounce(renderPicturesMiniature, RERENDER_DELAY);
+
+// Обработчик события при выборе фильтра;
+const onImagesFiltersButtonClick = (evt, picturesData) => {
+  const buttonFilter = evt.target;
+  setStyleButtonFilter(evt);
+  switch (buttonFilter) {
+    case filterDefaultButton:
+      return renderPicturesDebounce(picturesData);
+    case filterRandomButton:
+      return  renderPicturesDebounce(getRandomArray(picturesData));
+    case filterDiscussedButton:
+      return  renderPicturesDebounce(getDiscussedImages(picturesData));
+  }
+};
+
+//Функция отображения панели фильтров c обработчиком события при выборе фильтра;
+const addImageFilters = (picturesData) => {
+  imagesFilters.classList.remove('img-filters--inactive');
+  form.addEventListener('click', (evt) => onImagesFiltersButtonClick(evt, picturesData));
+};
+
+export {addImageFilters};
+
+
