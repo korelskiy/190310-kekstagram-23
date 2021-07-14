@@ -32,7 +32,7 @@ const getDiscussedImages = (pictures) => {
 const renderPicturesDebounce = debounce(renderPicturesMiniature, RERENDER_DELAY);
 
 // Обработчик события при выборе фильтра;
-const getImagesFilter = (evt, pictures) => {
+const setImagesFilter = (evt, pictures) => {
   const buttonFilter = evt.target;
   setStyleButtonFilter(evt);
   switch (buttonFilter) {
@@ -48,7 +48,7 @@ const getImagesFilter = (evt, pictures) => {
 //Функция отображения панели фильтров c обработчиком события при выборе фильтра;
 const addImageFilters = (pictures) => {
   imagesFilters.classList.remove('img-filters--inactive');
-  form.addEventListener('click', (evt) => getImagesFilter(evt, pictures));
+  form.addEventListener('click', (evt) => setImagesFilter(evt, pictures));
 };
 
 export {addImageFilters};
