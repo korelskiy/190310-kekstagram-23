@@ -1,10 +1,9 @@
 // Вспомогательные функции.
 
 const ALERT_SHOW_TIME = 5000;
-const FILTER_RANDOM_IMAGE_COUNT = 10;
 
 // Функция сообщения с ошибкой на 5 секунд;
-const showAlert = (message) => {
+const errorMessage = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = 100;
   alertContainer.style.position = 'absolute';
@@ -27,19 +26,19 @@ const showAlert = (message) => {
 const getRandomNumber = (min, max) => (max > min) ? Math.floor(Math.random() * (max - min + 1)) + min : null;
 
 // Функция получения массива случайных изображений;
-const getRandomArray = (items) => {
-  const arrayIndexImages = [];
-  const arrayRandomImages = [];
-  while (arrayIndexImages.length < FILTER_RANDOM_IMAGE_COUNT) {
+const getRandomArray = (items, count) => {
+  const itemsIndex = [];
+  const itemsRandom = [];
+  while (itemsIndex.length < count) {
     const randomIndex = getRandomNumber(0, items.length-1);
-    if (arrayIndexImages.indexOf(randomIndex) === -1) {
-      arrayIndexImages.push(randomIndex);
+    if (itemsIndex.indexOf(randomIndex) === -1) {
+      itemsIndex.push(randomIndex);
     }
   }
-  for (const value of arrayIndexImages) {
-    arrayRandomImages.push(items[value]);
+  for (const value of itemsIndex) {
+    itemsRandom.push(items[value]);
   }
-  return arrayRandomImages;
+  return itemsRandom;
 };
 
 // Событие нажатия клавиши Esc;
@@ -54,5 +53,5 @@ const debounce = (callback, timeoutDelay) => {
   };
 };
 
-export {getRandomNumber, isEscEvent, showAlert, debounce, getRandomArray};
+export {getRandomNumber, isEscEvent, errorMessage, debounce, getRandomArray};
 

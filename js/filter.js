@@ -5,27 +5,28 @@ import {renderPicturesMiniature} from './photo.js';
 
 const imagesFilters = document.querySelector('.img-filters');
 const form = imagesFilters.querySelector('.img-filters__form');
-const imagesFiltersButton = imagesFilters.querySelectorAll('.img-filters__button');
+const imagesFiltersButtons = imagesFilters.querySelectorAll('.img-filters__button');
 const filterDefaultButton = imagesFilters.querySelector('#filter-default');
 const filterRandomButton = imagesFilters.querySelector('#filter-random');
 const filterDiscussedButton = imagesFilters.querySelector('#filter-discussed');
 
 const RERENDER_DELAY = 500;
+const FILTER_RANDOM_IMAGE_COUNT = 10;
 
 // Функция применения стиля на активную кнопку фильтра;
 const setStyleButtonFilter = (evt) => {
   const buttonFilter = evt.target;
-  for (let index = 0; index < imagesFiltersButton.length; index++) {
-    imagesFiltersButton[index].classList.remove('img-filters__button--active');
+  for (let index = 0; index < imagesFiltersButtons.length; index++) {
+    imagesFiltersButtons[index].classList.remove('img-filters__button--active');
   }
   buttonFilter.classList.add('img-filters__button--active');
 };
 
 // Функция получения обсуждаемых изображений;
 const getDiscussedImages = (pictures) => {
-  const arrayDiscussedImages = pictures.slice();
-  arrayDiscussedImages.sort((second, first) => first.comments.length - second.comments.length);
-  return arrayDiscussedImages;
+  const discussedImages = pictures.slice();
+  discussedImages.sort((second, first) => first.comments.length - second.comments.length);
+  return discussedImages;
 };
 
 // Функция визуализации изображений с устранением дребезга;
@@ -39,9 +40,9 @@ const setImagesFilter = (evt, pictures) => {
     case filterDefaultButton:
       return renderPicturesDebounce(pictures);
     case filterRandomButton:
-      return  renderPicturesDebounce(getRandomArray(pictures));
+      return renderPicturesDebounce(getRandomArray(pictures, FILTER_RANDOM_IMAGE_COUNT));
     case filterDiscussedButton:
-      return  renderPicturesDebounce(getDiscussedImages(pictures));
+      return renderPicturesDebounce(getDiscussedImages(pictures));
   }
 };
 
