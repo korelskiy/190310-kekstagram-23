@@ -1,16 +1,19 @@
 import './form.js';
 import {renderPicturesMiniature} from './photo.js';
 import {fetchData} from './api.js';
-import {showAlert} from './util.js';
+import {errorMessage} from './util.js';
 import {addImageFilters} from './filter.js';
+
+const urlResource = 'https://23.javascript.pages.academy/kekstagram/data';
+const queryMethod = 'GET';
 
 // Получение данных с сервера;
 fetchData(
-  'https://23.javascript.pages.academy/kekstagram/data',
-  'GET',
+  urlResource,
+  queryMethod,
   (pictures) => {
     renderPicturesMiniature(pictures);
     addImageFilters(pictures);
   },
-  (onFail) => showAlert(onFail),
+  (onFail) => errorMessage(onFail),
 );
