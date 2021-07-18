@@ -27,18 +27,18 @@ const getRandomNumber = (min, max) => (max > min) ? Math.floor(Math.random() * (
 
 // Функция получения массива случайных изображений;
 const getRandomArray = (items, count) => {
-  const itemsIndex = [];
-  const itemsRandom = [];
-  while (itemsIndex.length < count) {
+  const indexes = [];
+  const randomItems = [];
+  while (indexes.length < count) {
     const randomIndex = getRandomNumber(0, items.length-1);
-    if (itemsIndex.indexOf(randomIndex) === -1) {
-      itemsIndex.push(randomIndex);
+    if (indexes.indexOf(randomIndex) === -1) {
+      indexes.push(randomIndex);
     }
   }
-  for (const value of itemsIndex) {
-    itemsRandom.push(items[value]);
+  for (const value of indexes) {
+    randomItems.push(items[value]);
   }
-  return itemsRandom;
+  return randomItems;
 };
 
 // Событие нажатия клавиши Esc;
