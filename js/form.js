@@ -116,6 +116,7 @@ const closeForm = () => {
   hashtagPhoto.style.border = '';
   photoPreview.style.filter = 'none';
   form.reset();
+  hashtagPhoto.setCustomValidity('');
 };
 
 //Функция отмены обработчика Esc;
