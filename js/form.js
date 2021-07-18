@@ -18,11 +18,11 @@ const controlSmaller = document.querySelector('.scale__control--smaller');
 const controlBigger = document.querySelector('.scale__control--bigger');
 const scaleControl = document.querySelector('.scale__control--value');
 const buttonZoomIn = document.querySelector('.scale__control--bigger');
-const urlResource = 'https://23.javascript.pages.academy/kekstagram';
-const queryMethod = 'POST';
-const messageObjects = {
-  success : document.querySelector('#success').content.querySelector('.success'),
-  error : document.querySelector('#error').content.querySelector('.error'),
+const URL_POST = 'https://23.javascript.pages.academy/kekstagram';
+const POST = 'POST';
+const Message = {
+  SUCCESS : document.querySelector('#success').content.querySelector('.success'),
+  ERROR : document.querySelector('#error').content.querySelector('.error'),
 };
 
 const MAX_HASHTAG_LENGTH = 20;
@@ -56,7 +56,7 @@ function onCloseFormButtonClick () {
 
 // Функция открытия окна с сообщением об отпавки формы;
 const openMessageForm = (messageType) => {
-  const messageNode = messageObjects[messageType].cloneNode(true);
+  const messageNode = Message[messageType.toUpperCase()].cloneNode(true);
   body.appendChild(messageNode);
   const closeButton = messageNode.querySelector(`.${messageType}__button`);
   closeButton.addEventListener('click', onCloseFormButtonClick);
@@ -137,9 +137,9 @@ const loadPhotoPreview = () => {
   const file = buttonUpload.files[0];
   photoPreview.file = file;
   const reader = new FileReader();
-  reader.onload = ((aImg) => (evt) => {
-    aImg.src = evt.target.result;
-  }) (photoPreview);
+  reader.addEventListener('load', () => {
+    photoPreview.src = reader.result;
+  });
   reader.readAsDataURL(file);
 };
 
@@ -147,8 +147,8 @@ const loadPhotoPreview = () => {
 const onButtonFormSubmit = (evt) => {
   evt.preventDefault();
   fetchData(
-    urlResource,
-    queryMethod,
+    URL_POST,
+    POST,
     () => {
       closeForm();
       openMessageForm('success');
