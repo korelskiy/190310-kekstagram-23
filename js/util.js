@@ -3,7 +3,7 @@
 const ALERT_SHOW_TIME = 5000;
 
 // Функция сообщения с ошибкой на 5 секунд;
-const errorMessage = (message) => {
+const getErrorMessage = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = 100;
   alertContainer.style.position = 'absolute';
@@ -53,5 +53,5 @@ const debounce = (callback, timeoutDelay) => {
   };
 };
 
-export {getRandomNumber, isEscEvent, errorMessage, debounce, getRandomArray};
+export {getRandomNumber, isEscEvent, getErrorMessage, debounce, getRandomArray};
 

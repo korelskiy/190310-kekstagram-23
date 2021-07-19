@@ -23,6 +23,7 @@ const onPreviewEscKeydown = (evt) => {
     evt.preventDefault();
     previewBlock.classList.add('hidden');
     body.classList.remove('modal-open');
+    document.removeEventListener('keydown', onPreviewEscKeydown);
   }
 };
 
