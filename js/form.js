@@ -25,7 +25,7 @@ const Message = {
   ERROR : document.querySelector('#error').content.querySelector('.error'),
 };
 
-const MAX_HASHTAG_LENGTH = 20;
+const REG_HASHTAG = RegExp('^#[A-Za-zА-Яа-я0-9]{1,19}$');
 const MAX_HASHTAG_COUNT = 5;
 const SCALE_STEP = 25;
 const MAX_SCALE_VALUE = '100%';
@@ -54,16 +54,6 @@ function onCloseFormButtonClick () {
   document.removeEventListener('click', onMessageOverlayClick);
 }
 
-// Функция открытия окна с сообщением об отпавки формы;
-const openMessageForm = (messageType) => {
-  const messageNode = Message[messageType.toUpperCase()].cloneNode(true);
-  body.appendChild(messageNode);
-  const closeButton = messageNode.querySelector(`.${messageType}__button`);
-  closeButton.addEventListener('click', onCloseFormButtonClick);
-  document.addEventListener('keydown', onMessageFormEscKeydown);
-  document.addEventListener('click', onMessageOverlayClick);
-};
-
 // Функция редактирования масштаба изображения;
 const onImageZoom = (evt) => {
   const isZoomIn = evt.target === buttonZoomIn;
@@ -78,22 +68,15 @@ const onImageZoom = (evt) => {
 
 // Правила валидации хэштегов;
 const getHashtagError = (hashtag) => {
-  const re = RegExp('^#[A-Za-zА-Яа-я0-9]{1,19}$');
   for (let index = 0; index < hashtag.length; index++) {
-    if (hashtag[index].indexOf('#') !== 0) {
-      return 'Хэштег должен начинаться с символа "#"';
-    } else if (hashtag[index].length === 1) {
-      return 'Хэштег не может состоять только из одной решетки';
-    } else if (hashtag[index].length > MAX_HASHTAG_LENGTH) {
-      return `Хэштег ${hashtag[index]}превышает максимальную длину на ${hashtag[index].length - MAX_HASHTAG_LENGTH} символов`;
-    } else if (hashtag.length > MAX_HASHTAG_COUNT) {
+    if (hashtag.length > MAX_HASHTAG_COUNT) {
       return 'Нельзя указывать больше пяти хэштегов к фотографии';
     } else if (hashtag[index].indexOf('#', 1) > 0) {
       return 'Хэштеги должны разделяться пробелом';
     } else if (hashtag.indexOf(hashtag[index], index + 1) > 0) {
       return 'Хэштеги не должны повторяться';
-    } else if (!re.test(hashtag[index])) {
-      return 'Хэштег не может содержать спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.';
+    } else if (!REG_HASHTAG.test(hashtag[index])) {
+      return '- хэш-тег начинается с символа # (решётка); \n - строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.; \n - хеш-тег не может состоять только из одной решётки; \n - максимальная длина одного хэш-тега 20 символов, включая решётку;';
     }
   }
   return '';
@@ -126,11 +109,22 @@ const hasFocusedElements = () => document.activeElement === hashtagPhoto || docu
 const onFormEscKeydown = (evt) => {
   if (isEscEvent(evt) && !hasFocusedElements()) {
     closeForm();
-    document.removeEventListener('keydown', onFormEscKeydown);
     hashtagPhoto.removeEventListener('input', onHashtagInput);
     controlSmaller.removeEventListener('click', onImageZoom);
     controlBigger.removeEventListener('click', onImageZoom);
+    document.removeEventListener('keydown', onFormEscKeydown);
   }
+};
+
+// Функция открытия окна с сообщением об отпавки формы;
+const openMessageForm = (messageType) => {
+  const messageNode = Message[messageType.toUpperCase()].cloneNode(true);
+  body.appendChild(messageNode);
+  const closeButton = messageNode.querySelector(`.${messageType}__button`);
+  closeButton.addEventListener('click', onCloseFormButtonClick);
+  document.addEventListener('keydown', onMessageFormEscKeydown);
+  document.addEventListener('click', onMessageOverlayClick);
+  document.removeEventListener('keydown', onFormEscKeydown);
 };
 
 // Загрузка выбранного изображения в Preview;
