@@ -16,9 +16,9 @@ const FILTER_RANDOM_IMAGE_COUNT = 10;
 // Функция применения стиля на активную кнопку фильтра;
 const setStyleButtonFilter = (evt) => {
   const buttonFilter = evt.target;
-  for (let index = 0; index < imagesFiltersButtons.length; index++) {
-    imagesFiltersButtons[index].classList.remove('img-filters__button--active');
-  }
+  imagesFiltersButtons.forEach((filterButton) => {
+    filterButton.classList.remove('img-filters__button--active');
+  });
   buttonFilter.classList.add('img-filters__button--active');
 };
 

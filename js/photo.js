@@ -8,8 +8,8 @@ const pictureTemplate = document.querySelector('#picture').content.querySelector
 // Функция очистки миниатурных изображений;
 const removeListPictures = () => {
   const listPicturesAll = document.querySelectorAll('.picture');
-  listPicturesAll.forEach((item) => {
-    item.remove();
+  listPicturesAll.forEach((picture) => {
+    picture.remove();
   });
 };
 
