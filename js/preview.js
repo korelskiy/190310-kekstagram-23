@@ -63,15 +63,15 @@ buttonClosePreview.addEventListener('click', () => {
 
 // Генерация комментариев к фотографии;
 const renderComments = (comments) => {
-  for (let index = 0; index <= comments.length-1; index++) {
-    const {avatar, name, message} = comments[index];
+  comments.forEach((comment) => {
+    const {avatar, name, message} = comment;
     const commentElement = commentTemplate.cloneNode(true);
     commentElement.querySelector('.social__picture').src = avatar;
     commentElement.querySelector('.social__picture').alt = name;
     commentElement.querySelector('.social__text').textContent = message;
     commentElement.classList.add('hidden');
     pictureListComments.appendChild(commentElement);
-  }
+  });
 };
 
 // Обработчик события при выборе миниатюрного изображения;
